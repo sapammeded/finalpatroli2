@@ -1,0 +1,3419 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FORM PATROLI PROFESIONAL SECURITY</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary: #0b3d91;
+  --primary-dark: #082a6b;
+  --primary-light: #1e56c9;
+  --secondary: #4f46e5;
+  --secondary-dark: #4338ca;
+  --accent: #10b981;
+  --accent-dark: #059669;
+  --warning: #f59e0b;
+  --warning-dark: #d97706;
+  --danger: #ef4444;
+  --danger-dark: #dc2626;
+  --info: #0ea5e9;
+  --info-dark: #0284c7;
+  --success: #10b981;
+  --success-dark: #059669;
+  --light: #f8fafc;
+  --dark: #1e293b;
+  --muted: #64748b;
+  --card-bg: #ffffff;
+  --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+  --gradient-success: linear-gradient(135deg, var(--success), var(--accent-dark));
+  --gradient-warning: linear-gradient(135deg, var(--warning), var(--warning-dark));
+  --gradient-danger: linear-gradient(135deg, var(--danger), var(--danger-dark));
+  --gradient-info: linear-gradient(135deg, var(--info), var(--info-dark));
+  --shadow-sm: 0 2px 8px rgba(15,23,36,0.08);
+  --shadow-md: 0 6px 18px rgba(15,23,36,0.12);
+  --shadow-lg: 0 12px 30px rgba(15,23,36,0.16);
+  --shadow-xl: 0 20px 40px rgba(15,23,36,0.2);
+}
+
+/* Notifikasi BANG Pri */
+#notificationModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  backdrop-filter: blur(12px);
+}
+
+.modal-content {
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  padding: 50px 40px;
+  border-radius: 24px;
+  text-align: center;
+  max-width: 680px;
+  width: 90%;
+  box-shadow: var(--shadow-xl);
+  animation: popIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 4px solid var(--primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--warning));
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.8) translateY(20px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.modal-content h2 {
+  color: var(--primary);
+  margin-bottom: 30px;
+  font-size: 32px;
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(11, 61, 145, 0.1);
+}
+
+.modal-content p {
+  margin-bottom: 40px;
+  font-size: 22px;
+  line-height: 1.6;
+  font-weight: 700;
+  color: transparent;
+  background: linear-gradient(45deg, var(--danger), var(--warning), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  padding: 15px;
+  border-radius: 12px;
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+#aamiinBtn {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  padding: 18px 50px;
+  border-radius: 60px;
+  font-size: 22px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+#aamiinBtn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.6s;
+}
+
+#aamiinBtn:hover {
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(79, 70, 229, 0.6);
+}
+
+#aamiinBtn:hover::before {
+  left: 100%;
+}
+
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  color: var(--dark);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 20px;
+}
+
+/* Header Styles */
+header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--gradient-primary);
+  padding: 28px 30px;
+  border-radius: 20px;
+  color: white;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.08" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+  background-size: cover;
+  opacity: 0.1;
+}
+
+.header-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+}
+
+header h1 {
+  font-size: 2.8rem;
+  margin-bottom: 8px;
+  font-weight: 800;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  letter-spacing: -0.5px;
+}
+
+header .subtitle {
+  font-size: 1.3rem;
+  opacity: 0.95;
+  font-weight: 500;
+}
+
+.logo {
+  width: 90px;
+  height: 90px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 3px solid rgba(255,255,255,0.3);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(10px);
+  flex-shrink: 0;
+}
+
+/* Card Styles */
+.card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 28px;
+  margin-top: 20px;
+  box-shadow: var(--shadow-md);
+  border-left: 6px solid var(--primary);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Form Elements */
+.row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.col {
+  flex: 1;
+  min-width: 240px;
+}
+
+label {
+  font-size: 14px;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+input[type="text"], input[type="date"], input[type="time"], input[type="password"], select, textarea {
+  width: 100%;
+  padding: 16px 18px;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: var(--light);
+  font-family: inherit;
+}
+
+input[type="text"]:focus, input[type="date"]:focus, input[type="time"]:focus, 
+input[type="password"]:focus, select:focus, textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(11, 61, 145, 0.15);
+  outline: none;
+  background: white;
+  transform: translateY(-2px);
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 28px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.6s;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 2px solid #e2e8f0;
+  color: var(--dark);
+}
+
+.btn-ghost:hover {
+  background: var(--light);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.btn-success {
+  background: var(--gradient-success);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, var(--success-dark), var(--accent));
+}
+
+.btn-danger {
+  background: var(--gradient-danger);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, var(--danger-dark), #b91c1c);
+}
+
+.btn-warning {
+  background: var(--gradient-warning);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-warning:hover {
+  background: linear-gradient(135deg, var(--warning-dark), #b45309);
+}
+
+.btn-info {
+  background: var(--gradient-info);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-info:hover {
+  background: linear-gradient(135deg, var(--info-dark), #0369a1);
+}
+
+/* Areas Section */
+.areas {
+  margin-top: 20px;
+}
+
+.area {
+  border: 3px dashed #e2e8f0;
+  padding: 24px;
+  border-radius: 18px;
+  margin-bottom: 20px;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.area:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+}
+
+.area h3 {
+  margin: 0 0 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.area h3 input {
+  border: none;
+  background: transparent;
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: var(--primary);
+  flex: 1;
+}
+
+.photo-grid {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  max-height: 440px;
+  overflow: auto;
+  padding: 16px;
+  background: var(--light);
+  border-radius: 14px;
+  margin-top: 16px;
+}
+
+.photo-thumb {
+  flex: 0 0 auto;
+  width: 110px;
+  height: 110px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.photo-thumb::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(11, 61, 145, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.photo-thumb:hover {
+  transform: scale(1.08);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.photo-thumb:hover::before {
+  opacity: 1;
+}
+
+.photo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Tab System */
+.tab-container {
+  margin-top: 20px;
+}
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  border-bottom: 3px solid #e2e8f0;
+  background: var(--light);
+  border-radius: 16px 16px 0 0;
+  padding: 8px;
+  margin-bottom: 0;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 16px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-weight: 700;
+  color: var(--muted);
+  position: relative;
+  overflow: hidden;
+}
+
+.tab::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(11, 61, 145, 0.1), transparent);
+  transition: left 0.6s;
+}
+
+.tab:hover::before {
+  left: 100%;
+}
+
+.tab:hover {
+  background: rgba(11, 61, 145, 0.05);
+  color: var(--primary);
+}
+
+.tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  background: rgba(11, 61, 145, 0.1);
+}
+
+.tab-content {
+  display: none;
+  padding: 24px 0;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Signature Pad */
+.signature-pad {
+  width: 100%;
+  height: 220px;
+  border: 3px solid #e2e8f0;
+  border-radius: 14px;
+  background: white;
+  cursor: crosshair;
+  margin-bottom: 20px;
+  transition: border-color 0.3s ease;
+}
+
+.signature-pad:focus {
+  border-color: var(--primary);
+}
+
+.signature-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* Camera & Native Button */
+.camera-native-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 30px;
+  background: var(--gradient-success);
+  color: white;
+  border-radius: 16px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 800;
+  margin-top: 16px;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  font-size: 18px;
+}
+
+.camera-native-btn:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, var(--success-dark), var(--accent));
+}
+
+.area-selector {
+  margin: 20px 0;
+  padding: 20px;
+  background: var(--light);
+  border-radius: 16px;
+  border: 2px solid #e2e8f0;
+}
+
+/* Cleanup Section */
+.cleanup-section {
+  margin-top: 24px;
+  padding: 24px;
+  border-radius: 18px;
+  border: 3px solid;
+}
+
+.cleanup-section.info {
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border-color: #bfdbfe;
+}
+
+.cleanup-section.success {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border-color: #bbf7d0;
+}
+
+.cleanup-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.cleanup-stat {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  text-align: center;
+  border: 2px solid #e5e7eb;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cleanup-stat::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--primary);
+}
+
+.cleanup-stat:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+}
+
+.cleanup-stat .number {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--danger);
+  margin-bottom: 8px;
+}
+
+.cleanup-stat.success .number {
+  color: var(--success);
+}
+
+.cleanup-stat.warning .number {
+  color: var(--warning);
+}
+
+.cleanup-stat.info .number {
+  color: var(--info);
+}
+
+.cleanup-stat .label {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cleanup-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.auto-cleanup-option {
+  margin: 20px 0;
+  padding: 20px;
+  background: var(--light);
+  border-radius: 14px;
+  border-left: 6px solid var(--primary);
+}
+
+/* Guide Section */
+.guide-section {
+  margin: 24px 0;
+  padding: 24px;
+  background: var(--light);
+  border-radius: 18px;
+  border: 2px solid #e2e8f0;
+}
+
+.guide-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  border-left: 6px solid var(--primary);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.guide-step:hover {
+  transform: translateX(8px);
+  box-shadow: var(--shadow-md);
+}
+
+.guide-step-number {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-md);
+  font-size: 18px;
+}
+
+.guide-step-content {
+  flex: 1;
+}
+
+.guide-step-content h4 {
+  margin: 0 0 10px 0;
+  color: var(--primary);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.guide-step-content p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.guide-tip {
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  border: 2px solid #fef3c7;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 12px 0;
+  border-left: 5px solid var(--warning);
+}
+
+.guide-warning {
+  background: linear-gradient(135deg, #fef2f2, #fecaca);
+  border: 2px solid #fecaca;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 12px 0;
+  border-left: 5px solid var(--danger);
+}
+
+.quality-notice {
+  background: linear-gradient(135deg, #f0fdf4, #bbf7d0);
+  border: 2px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 14px;
+  margin: 12px 0;
+  font-size: 13px;
+  color: var(--success-dark);
+  border-left: 5px solid var(--success);
+  font-weight: 600;
+}
+
+.pdf-notice {
+  background: linear-gradient(135deg, #eff6ff, #bfdbfe);
+  border: 2px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 14px;
+  margin: 12px 0;
+  font-size: 13px;
+  color: var(--info-dark);
+  border-left: 5px solid var(--info);
+  font-weight: 600;
+}
+
+/* Help Button */
+.help-btn {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 200000;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--gradient-info);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 3px solid white;
+  font-weight: 800;
+}
+
+.help-btn:hover {
+  transform: scale(1.15) rotate(10deg);
+  box-shadow: 0 10px 30px rgba(14, 165, 233, 0.5);
+}
+
+/* Status & Overlay */
+.status-box {
+  padding: 20px;
+  border-radius: 14px;
+  margin-top: 24px;
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+
+.status-success {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border: 2px solid #bbf7d0;
+  color: var(--success-dark);
+}
+
+.status-error {
+  background: linear-gradient(135deg, #fef2f2, #fecaca);
+  border: 2px solid #fecaca;
+  color: var(--danger-dark);
+}
+
+.status-info {
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border: 2px solid #bfdbfe;
+  color: var(--info-dark);
+}
+
+#overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6,8,15,0.85);
+  z-index: 999999;
+  backdrop-filter: blur(8px);
+}
+
+#overlay .card {
+  background: var(--dark);
+  color: white;
+  padding: 32px;
+  border-radius: 20px;
+  max-width: 480px;
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+  border-left: 6px solid var(--primary);
+}
+
+#overlay .bar {
+  height: 14px;
+  background: #374151;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+#overlay .bar-inner {
+  height: 14px;
+  width: 0%;
+  background: var(--gradient-primary);
+  transition: width 0.4s ease;
+}
+
+.modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.8);
+  z-index: 999999;
+  backdrop-filter: blur(8px);
+  padding: 20px;
+}
+
+.modal .modal-card {
+  background: white;
+  padding: 24px;
+  border-radius: 20px;
+  max-width: 900px;
+  width: 96%;
+  max-height: 90%;
+  overflow: auto;
+  box-shadow: var(--shadow-xl);
+  border: 3px solid var(--primary);
+}
+
+/* Download Options */
+.download-options {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+/* Footer */
+footer {
+  margin-top: 28px;
+  text-align: center;
+  color: var(--muted);
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  font-weight: 600;
+}
+
+/* Small Text */
+.small {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+    margin: 16px auto;
+  }
+  
+  header {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+    padding: 24px 20px;
+  }
+  
+  header h1 {
+    font-size: 2.2rem;
+  }
+  
+  .logo {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .col {
+    min-width: 100%;
+  }
+  
+  .cleanup-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .tabs {
+    flex-direction: column;
+  }
+  
+  .modal-content {
+    padding: 30px 20px;
+  }
+  
+  .modal-content h2 {
+    font-size: 26px;
+  }
+  
+  .modal-content p {
+    font-size: 18px;
+  }
+  
+  #aamiinBtn {
+    padding: 16px 35px;
+    font-size: 18px;
+  }
+}
+
+/* Animation for elements */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card, .area, .guide-step {
+  animation: slideInUp 0.6s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+</style>
+</head>
+<body>
+<!-- Modal Notifikasi BANG Pri -->
+<div id="notificationModal">
+  <div class="modal-content">
+    <h2><i class="fas fa-bullhorn"></i> PENGUMUMAN PENTING</h2>
+    <p>BANG Pri ADALAH PRIA TERTAMPAN DAN KAYA RAYA YANG PERNAH KU KENAL DALAM HIDUP KU</p>
+    <button id="aamiinBtn">Aamiin <i class="fas fa-hand-point-up"></i></button>
+  </div>
+</div>
+
+<!-- Help Button -->
+<div class="help-btn" id="helpBtn">?</div>
+
+<div class="container">
+  <header>
+    <div class="logo" id="logoPreview">
+      <img id="logoImg" src="" style="max-width:100%;display:none">
+    </div>
+    <div class="header-content">
+      <h1><i class="fas fa-shield-alt"></i> FORM PATROLI PROFESIONAL SECURITY</h1>
+      <div class="subtitle">Pilih banyak foto per area, simpan ke storage, eksport PDF profesional</div>
+    </div>
+  </header>
+
+  <div class="card">
+    <div class="row">
+      <div class="col">
+        <label><i class="fas fa-user"></i> NAMA PETUGAS</label>
+        <input id="petugasName" type="text" placeholder="Masukkan nama petugas..." />
+      </div>
+      <div class="col">
+        <label><i class="fas fa-clock"></i> SHIFT</label>
+        <input id="shift" type="text" placeholder="Contoh: Pagi, Siang, Malam..." />
+      </div>
+      <div class="col">
+        <label><i class="fas fa-calendar"></i> TANGGAL</label>
+        <input id="tanggal" type="date" />
+      </div>
+      <div class="col">
+        <label><i class="fas fa-clock"></i> JAM</label>
+        <input id="jam" type="time" />
+      </div>
+    </div>
+
+    <!-- ==================== LOGO SYSTEM DENGAN PASSWORD ==================== -->
+    <div style="margin-top:20px" class="row">
+      <div class="col">
+        <label><i class="fas fa-image"></i> LOGO PERUSAHAAN</label>
+        <div class="small" style="color:var(--success);font-weight:600;margin-bottom:8px">
+          <i class="fas fa-check-circle"></i> Logo default sudah terpasang
+        </div>
+        
+        <!-- Password Input untuk Upload Logo Custom -->
+        <div style="margin-top:12px">
+          <label class="small"><i class="fas fa-key"></i> PASSWORD UPLOAD LOGO CUSTOM</label>
+          <input id="logoPassword" type="password" placeholder="Masukkan password upload logo..." />
+        </div>
+        
+        <!-- Upload Logo Section (Awalnya Hidden) -->
+<div id="logoUploadSection" style="display:none; margin-top:12px">
+  <label class="small"><i class="fas fa-upload"></i> UPLOAD LOGO CUSTOM</label>
+  <input id="uploadLogo" type="file" accept="image/*" style="display:block;width:100%;padding:12px;border:2px dashed #e2e8f0;border-radius:10px;margin-top:8px;background:var(--light)" />
+  <div class="small" style="color:var(--muted);margin-top:6px">
+    <i class="fas fa-info-circle"></i> Upload logo custom (PNG/JPG, max 2MB)
+  </div>
+</div>
+      
+      <div style="align-self:end">
+        <button id="clearBtn" class="btn btn-ghost"><i class="fas fa-broom"></i> Reset Data</button>
+      </div>
+    </div>
+
+    <!-- ==================== TANDA TANGAN DENGAN PERBAIKAN SCROLL ==================== -->
+    <div style="margin-top:20px">
+      <label><i class="fas fa-signature"></i> TANDA TANGAN DIGITAL</label>
+      
+      <!-- Input Nama untuk Tanda Tangan -->
+      <div style="margin-bottom:16px">
+        <label class="small"><i class="fas fa-user"></i> NAMA LENGKAP UNTUK TANDA TANGAN</label>
+        <input id="signatureName" type="text" placeholder="Masukkan nama lengkap sesuai identitas..." 
+               style="width:100%;padding:12px 15px;border:2px solid #e2e8f0;border-radius:10px;" />
+      </div>
+
+      <div class="signature-controls">
+        <button id="clearSignature" class="btn btn-ghost"><i class="fas fa-eraser"></i> Hapus Tanda Tangan</button>
+        <button id="saveSignature" class="btn btn-primary"><i class="fas fa-check"></i> Simpan Tanda Tangan</button>
+      </div>
+      <canvas id="signaturePad" class="signature-pad"></canvas>
+      <div class="small">⚠️ Gambar tanda tangan di area above. Scroll akan otomatis disabled saat menggambar.</div>
+    </div>
+
+    <!-- Tab Container -->
+    <div class="tab-container">
+      <div class="tabs">
+        <div class="tab active" data-tab="guide"><i class="fas fa-book"></i> PANDUAN</div>
+        <div class="tab" data-tab="gallery"><i class="fas fa-images"></i> GALERI</div>
+        <div class="tab" data-tab="camera"><i class="fas fa-camera"></i> KAMERA</div>
+        <div class="tab" data-tab="cleanup"><i class="fas fa-broom"></i> CLEAN-UP</div>
+      </div>
+      
+      <!-- Panduan Tab -->
+      <div class="tab-content active" id="guideTab">
+        <div class="guide-section">
+          <h3 style="margin:0 0 20px 0;color:var(--primary);font-size:1.8rem;font-weight:800">
+            <i class="fas fa-graduation-cap"></i> PANDUAN LENGKAP PENGGUNAAN APLIKASI PATROLI
+          </h3>
+          
+          <div class="guide-step">
+            <div class="guide-step-number">1</div>
+            <div class="guide-step-content">
+              <h4>ISI DATA AWAL</h4>
+              <p>Lengkapi data petugas, shift, tanggal, dan jam patroli. Data ini akan muncul di laporan PDF.</p>
+              <div class="guide-tip">
+                <i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Pastikan tanggal dan jam sesuai dengan waktu patroli sebenarnya.
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-number">2</div>
+            <div class="guide-step-content">
+              <h4>LOGO & TANDA TANGAN DIGITAL</h4>
+              <p>Logo default sudah terpasang. Untuk logo custom, masukkan password khusus. Buat tanda tangan digital dengan nama lengkap.</p>
+              <div class="guide-tip">
+                <i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Tanda tangan bisa digambar langsung di canvas dengan mouse atau jari (untuk touchscreen).
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-number">3</div>
+            <div class="guide-step-content">
+              <h4>BUAT AREA PATROLI</h4>
+              <p>Pergi ke tab <strong>KAMERA</strong> → klik <strong>"Tambah Area Baru"</strong>. Beri nama area sesuai lokasi patroli.</p>
+              <div class="guide-warning">
+                <i class="fas fa-exclamation-triangle"></i> <strong>Penting:</strong> Anda harus membuat area dulu sebelum bisa mengambil foto.
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-number">4</div>
+            <div class="guide-step-content">
+              <h4>AMBIL FOTO DENGAN KAMERA HP</h4>
+              <p>Pilih area target → klik <strong>"BUKA KAMERA HP"</strong> → ambil foto langsung dari aplikasi kamera HP.</p>
+              <div class="quality-notice">
+                <i class="fas fa-check-circle"></i> <strong>Kualitas Foto Terjaga:</strong> Foto disimpan dengan kualitas tinggi (90%) untuk keperluan dokumentasi.
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-number">5</div>
+            <div class="guide-step-content">
+              <h4>TAMBAH FOTO DARI GALERI (OPSIONAL)</h4>
+              <p>Untuk akses galeri, buka tab <strong>GALERI</strong> → masukkan password → unlock akses.</p>
+              <div class="guide-warning">
+                <i class="fas fa-lock"></i> <strong>Security:</strong> Hanya personel berwenang yang bisa akses galeri.
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-number">6</div>
+            <div class="guide-step-content">
+              <h4>KELOLA FOTO & DESKRIPSI</h4>
+              <p>Klik thumbnail foto untuk menambah deskripsi. Tekan lama (long press) untuk hapus foto.</p>
+              <div class="guide-tip">
+                <i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Jika deskripsi dikosongkan, otomatis terisi "TERKENDALI AMAN".
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-number">7</div>
+            <div class="guide-step-content">
+              <h4>BUAT LAPORAN PDF DASHBOARD</h4>
+              <p>Setelah selesai patroli, klik <strong>"Generate PRO PDF"</strong> untuk download laporan lengkap format dashboard.</p>
+              <div class="pdf-notice">
+                <i class="fas fa-file-pdf"></i> <strong>PDF Dashboard:</strong> Photo besar dengan deskripsi di bawah, auto page break untuk deskripsi panjang.
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-number">8</div>
+            <div class="guide-step-content">
+              <h4>BERSIHKAN DATA (PENTING!)</h4>
+              <p>Setelah laporan didownload, buka tab <strong>CLEAN-UP</strong> → pilih <strong>"Quick Clean-Up"</strong>.</p>
+              <div class="guide-warning">
+                <i class="fas fa-broom"></i> <strong>Penting:</strong> Selalu bersihkan data setelah patroli untuk hindari storage penuh.
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div style="margin-top:28px;text-align:center">
+            <button onclick="switchToTab('camera')" class="btn btn-primary" style="padding:18px 32px;font-size:16px">
+              <i class="fas fa-play-circle"></i> MULAI PATROLI SEKARANG
+            </button>
+            <button onclick="switchToTab('cleanup')" class="btn btn-ghost" style="padding:18px 32px;font-size:16px">
+              <i class="fas fa-chart-bar"></i> CEK STORAGE
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Galeri Tab -->
+      <div class="tab-content" id="galleryTab">
+        <div class="row">
+          <div class="col">
+            <label><i class="fas fa-key"></i> MASTER PASSWORD UNTUK AKSES MONITORING SYSTEM</label>
+            <input id="galleryPassword" type="password" placeholder="Masukkan master password..." />
+          </div>
+          <div style="align-self:end">
+            <button id="unlockGalleryBtn" class="btn btn-primary"><i class="fas fa-unlock"></i> BUKA AKSES GALERI</button>
+          </div>
+        </div>
+        <div id="galleryAccess" style="display:none; margin-top:20px">
+          <div class="quality-notice">
+            <i class="fas fa-check-circle"></i> Akses galeri berhasil dibuka!
+          </div>
+          <button id="addAreaBtn" class="btn btn-ghost" style="margin-top:16px">
+            <i class="fas fa-plus"></i> Tambah Area Baru
+          </button>
+          <div class="small" style="margin-top:12px">Sekarang Anda dapat menambahkan area dan mengupload foto dari galeri</div>
+        </div>
+      </div>
+      
+      <!-- Camera Tab -->
+      <div class="tab-content" id="cameraTab">
+        <div class="small" style="margin-bottom:12px;font-weight:600">
+          <i class="fas fa-mobile-alt"></i> Ambil foto langsung menggunakan <strong style="color:var(--primary)">kamera asli HP Anda</strong>
+        </div>
+        
+        <!-- Area Selector -->
+        <div class="area-selector" id="areaSelector" style="display:none">
+          <label class="small" style="font-weight:700;color:var(--primary)"><i class="fas fa-map-marker-alt"></i> PILIH AREA UNTUK FOTO:</label>
+          <select id="targetAreaSelect" style="width:100%;padding:14px;border-radius:12px;border:2px solid #e2e8f0;margin-top:8px;font-size:15px">
+            <option value="">-- Pilih Area --</option>
+          </select>
+          <div class="small" style="margin-top:8px;color:var(--muted)">Pilih area mana yang akan menerima foto dari kamera</div>
+        </div>
+
+        <!-- Tombol untuk buka kamera native HP -->
+        <div style="text-align:center; margin:28px 0">
+          <div class="camera-native-btn" id="openNativeCamera">
+            <i class="fas fa-camera"></i> BUKA KAMERA HP
+          </div>
+          <input type="file" id="nativeCameraInput" accept="image/*" capture="camera" style="display:none" />
+          <div class="small" style="margin-top:12px">Klik tombol di atas untuk membuka kamera asli HP Anda</div>
+          <div class="quality-notice">
+            <i class="fas fa-check-circle"></i> Foto disimpan dengan kualitas tinggi (90%) untuk dokumentasi yang jelas
+          </div>
+        </div>
+
+        <div class="small" style="color:var(--muted); margin-top:20px;text-align:center">
+          <i class="fas fa-info-circle"></i> <strong>Catatan:</strong> Tombol ini akan membuka aplikasi kamera bawaan HP Anda, bukan kamera di browser.
+        </div>
+        
+        <!-- Tombol Tambah Area untuk Camera Tab -->
+        <div style="margin-top:28px;text-align:center">
+          <button id="addAreaCameraBtn" class="btn btn-ghost">
+            <i class="fas fa-plus-circle"></i> Tambah Area Baru (Kamera)
+          </button>
+          <div class="small" style="margin-top:12px">Buat area baru untuk menampung foto dari kamera</div>
+        </div>
+      </div>
+
+      <!-- CLEAN-UP Tab -->
+      <div class="tab-content" id="cleanupTab">
+        <div class="cleanup-section info">
+          <h3 style="margin:0 0 16px 0;color:var(--primary);font-size:1.6rem;font-weight:800">
+            <i class="fas fa-broom"></i> AUTO CLEAN-UP SYSTEM
+          </h3>
+          <div class="small" style="color:var(--muted);margin-bottom:20px;font-size:14px">
+            Bersihkan semua data patroli lama untuk memulai sesi baru. Fitur ini mencegah masalah storage penuh.
+          </div>
+
+          <!-- Stats Display -->
+          <div class="cleanup-stats" id="cleanupStats">
+            <div class="cleanup-stat">
+              <div class="number" id="statAreas">0</div>
+              <div class="label">Area Patroli</div>
+            </div>
+            <div class="cleanup-stat">
+              <div class="number" id="statPhotos">0</div>
+              <div class="label">Total Foto</div>
+            </div>
+            <div class="cleanup-stat">
+              <div class="number" id="statStorage">0 MB</div>
+              <div class="label">Penggunaan Storage</div>
+            </div>
+            <div class="cleanup-stat">
+              <div class="number warning" id="statIndexedDB">0</div>
+              <div class="label">Data IndexedDB</div>
+            </div>
+          </div>
+
+          <!-- Auto Cleanup Options -->
+          <div class="auto-cleanup-option">
+            <h4 style="margin:0 0 12px 0;color:var(--primary);font-size:1.3rem">
+              <i class="fas fa-bolt"></i> QUICK CLEAN-UP
+            </h4>
+            <div class="small" style="color:var(--muted);margin-bottom:16px">
+              Hanya hapus data patroli (area & foto) tapi tetap simpan logo dan tanda tangan. Aman untuk sesi patroli harian.
+            </div>
+            <button id="quickCleanupBtn" class="btn btn-success">
+              <i class="fas fa-bolt"></i> JALANKAN QUICK CLEAN-UP
+            </button>
+          </div>
+
+          <div class="auto-cleanup-option">
+            <h4 style="margin:0 0 12px 0;color:var(--danger);font-size:1.3rem">
+              <i class="fas fa-skull-crossbones"></i> DEEP CLEAN-UP
+            </h4>
+            <div class="small" style="color:var(--muted);margin-bottom:16px">
+              Hapus SEMUA DATA termasuk logo, tanda tangan, password. Aplikasi akan kembali seperti baru.
+            </div>
+            <button id="deepCleanupBtn" class="btn btn-danger">
+              <i class="fas fa-skull-crossbones"></i> JALANKAN DEEP CLEAN-UP
+            </button>
+          </div>
+
+          <!-- SUPER CLEANUP BUTTON - ONE CLICK SOLUTION -->
+          <div class="auto-cleanup-option" style="border-left: 6px solid #ef4444; background: linear-gradient(135deg, #fef2f2, #fecaca);">
+            <h4 style="margin:0 0 12px 0;color:var(--danger);font-size:1.3rem">
+              <i class="fas fa-nuclear"></i> SUPER CLEAN-UP (ONE-CLICK SOLUTION)
+            </h4>
+            <div class="small" style="color:var(--muted);margin-bottom:16px">
+              <strong>SOLUSI TERBAIK UNTUK MASALAH STORAGE!</strong><br>
+              Sekali klik - hapus SEMUA data patroli, reset aplikasi ke kondisi baru, bebaskan storage penuh.
+            </div>
+            <button id="superCleanupBtn" class="btn btn-danger" style="padding: 18px 32px; font-size: 18px; font-weight: 800;">
+              <i class="fas fa-broom"></i> JALANKAN SUPER CLEAN-UP
+            </button>
+            <div class="small" style="margin-top:8px;color:var(--danger-dark);font-weight:600">
+              ⚠️ PERINGATAN: Tindakan ini tidak dapat dibatalkan!
+            </div>
+          </div>
+
+          <!-- Maintenance Tools -->
+          <div class="cleanup-actions">
+            <button id="checkStorageBtn" class="btn btn-ghost">
+              <i class="fas fa-search"></i> Periksa Storage
+            </button>
+            <button id="compressAllBtn" class="btn btn-warning">
+              <i class="fas fa-compress-alt"></i> Kompres Semua Foto
+            </button>
+            <button id="backupDataBtn" class="btn btn-ghost">
+              <i class="fas fa-save"></i> Backup Data
+            </button>
+             <button id="manualCleanupBtn" class="btn btn-warning">
+  <i class="fas fa-memory"></i> Cleanup Memory
+</button>
+          </div>
+
+          <!-- Status Display -->
+          <div id="cleanupStatus" class="status-box"></div>
+        </div>
+
+        <!-- Quick Start Section -->
+        <div class="cleanup-section success" style="margin-top:28px">
+          <h3 style="margin:0 0 16px 0;color:var(--success-dark);font-size:1.6rem;font-weight:800">
+            <i class="fas fa-rocket"></i> QUICK START PATROLI BARU
+          </h3>
+          <div class="small" style="color:var(--muted);margin-bottom:20px">
+            Setelah clean-up, langsung mulai patroli baru:
+          </div>
+          
+          <div class="cleanup-actions">
+            <button id="startPatroliBtn" class="btn btn-primary">
+              <i class="fas fa-play"></i> MULAI PATROLI BARU
+            </button>
+            <button id="addFirstAreaBtn" class="btn btn-success">
+              <i class="fas fa-plus"></i> TAMBAH AREA PERTAMA
+            </button>
+            <button id="goToCameraBtn" class="btn btn-ghost">
+              <i class="fas fa-camera"></i> KE TAB KAMERA
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+   <div style="margin-top:20px" class="row">
+  <div class="download-options">
+    <button id="compressBtn" class="btn btn-ghost"><i class="fas fa-compress-alt"></i> Kompres Semua</button>
+    <button id="backupBtn" class="btn btn-ghost"><i class="fas fa-save"></i> Backup</button>
+    <button onclick="manualDeepCleanup()" class="btn btn-warning"><i class="fas fa-optimize"></i> Optimize Storage</button>
+    <button id="genPdfBtn" class="btn btn-primary"><i class="fas fa-file-pdf"></i> Generate PRO PDF</button>
+  </div>
+</div>
+
+  <div id="areas" class="areas"></div>
+
+  <div class="card">
+    <div class="small" style="font-weight:600">
+      <i class="fas fa-eye"></i> Preview: klik thumbnail untuk deskripsi panjang atau tekan-hold untuk hapus.
+    </div>
+    <div class="quality-notice" style="margin-top:12px">
+      <i class="fas fa-lightbulb"></i> <strong>Deskripsi otomatis:</strong> Jika dikosongkan akan terisi "TERKENDALI AMAN"
+    </div>
+  </div>
+
+  <footer>
+    <i class="fas fa-copyright"></i> Patroli PRO - Panduan Lengkap tersedia di Tab <i class="fas fa-book"></i> PANDUAN
+  </footer>
+</div>
+
+<!-- overlay and modal -->
+<div id="overlay">
+  <div class="card">
+    <div id="overlayText" style="font-size:18px;font-weight:700">Memproses...</div>
+    <div class="bar"><div class="bar-inner" id="barInner"></div></div>
+    <div style="margin-top:12px;font-size:14px;color:#cbd5e1">Jangan tutup halaman.</div>
+  </div>
+</div>
+
+<div id="modal" class="modal">
+  <div class="modal-card" id="modalCard"></div>
+</div>
+
+<script>
+// ==================== KONFIGURASI AWAL ====================
+// GANTI URL LOGO DEFAULT DI SINI:
+const DEFAULT_LOGO_URL = "https://i.ibb.co.com/dJV2bjQR/IMG-20251123-001741.png";
+
+// PASSWORD SYSTEM
+const MASTER_PASSWORD = "supangat505";          // Password galeri
+const LOGO_UPLOAD_PASSWORD = "mbahpritampan";   // Password upload logo (BEDA!)
+
+// ==================== MEMORY MANAGER CLASS ====================
+class MemoryManager {
+    constructor() {
+        this.activeBlobUrls = new Map(); // key -> {url, lastUsed}
+        this.maxBlobUrls = 50; // Limit memory usage
+    }
+    
+    addBlobUrl(key, blobUrl) {
+        // Cleanup jika melebihi limit
+        if (this.activeBlobUrls.size >= this.maxBlobUrls) {
+            this.cleanupOldest(10);
+        }
+        this.activeBlobUrls.set(key, {
+            url: blobUrl,
+            lastUsed: Date.now()
+        });
+    }
+    
+    revokeBlobUrl(key) {
+        const item = this.activeBlobUrls.get(key);
+        if (item) {
+            URL.revokeObjectURL(item.url);
+            this.activeBlobUrls.delete(key);
+        }
+    }
+    
+    cleanupOldest(count = 10) {
+        const entries = Array.from(this.activeBlobUrls.entries())
+            .sort((a, b) => a[1].lastUsed - b[1].lastUsed);
+        
+        entries.slice(0, count).forEach(([key]) => {
+            this.revokeBlobUrl(key);
+        });
+    }
+    
+    fullCleanup() {
+        this.activeBlobUrls.forEach((value, key) => {
+            this.revokeBlobUrl(key);
+        });
+        this.activeBlobUrls.clear();
+        
+        // Force garbage collection jika tersedia
+        if (window.gc) {
+            window.gc();
+        }
+        
+        console.log('🧹 Memory cleanup completed');
+    }
+    
+    updateUsage(key) {
+        const item = this.activeBlobUrls.get(key);
+        if (item) {
+            item.lastUsed = Date.now();
+        }
+    }
+}
+
+// Initialize Memory Manager
+const memoryManager = new MemoryManager();
+
+// ==================== APLIKASI UTAMA ====================
+(async function(){
+  // Notifikasi BANG Pri
+  const notificationModal = document.getElementById('notificationModal');
+  const aamiinBtn = document.getElementById('aamiinBtn');
+  
+  if (localStorage.getItem('bangPriNotif') !== 'dilihat') {
+    notificationModal.style.display = 'flex';
+  }
+  
+  aamiinBtn.addEventListener('click', function() {
+    notificationModal.style.display = 'none';
+    localStorage.setItem('bangPriNotif', 'dilihat');
+  });
+
+  // IndexedDB setup
+  const DB_NAME = 'patrol_db_v1';
+  const STORE_BLOBS = 'blobs';
+  const STORE_META = 'meta';
+  let db = null;
+  
+  function openDB(){
+    return new Promise((res) => {
+      if(!('indexedDB' in window)) return res(null);
+      const rq = indexedDB.open(DB_NAME, 1);
+      rq.onupgradeneeded = (e)=>{
+        const d = e.target.result;
+        if(!d.objectStoreNames.contains(STORE_BLOBS)) d.createObjectStore(STORE_BLOBS);
+        if(!d.objectStoreNames.contains(STORE_META)) d.createObjectStore(STORE_META);
+      };
+      rq.onsuccess = ()=> { db = rq.result; res(db); };
+      rq.onerror = ()=> res(null);
+    });
+  }
+  await openDB();
+
+  function idbPut(store, key, value){ return new Promise((res)=>{ if(!db){ res(false); return; } const tx=db.transaction([store],'readwrite'); const os=tx.objectStore(store); const r=os.put(value, key); r.onsuccess=()=>res(true); r.onerror=()=>res(false); }); }
+  function idbGet(store, key){ return new Promise((res)=>{ if(!db){ res(null); return; } const tx=db.transaction([store],'readonly'); const os=tx.objectStore(store); const r=os.get(key); r.onsuccess=()=>res(r.result); r.onerror=()=>res(null); }); }
+  function idbDelete(store, key){ return new Promise((res)=>{ if(!db){ res(false); return; } const tx=db.transaction([store],'readwrite'); const os=tx.objectStore(store); const r=os.delete(key); r.onsuccess=()=>res(true); r.onerror=()=>res(false); }); }
+
+// ==================== AUTO STORAGE CLEANUP SYSTEM ====================
+async function autoStorageCleanup() {
+    console.log('🔄 Auto storage cleanup running...');
+    
+    try {
+        // 1. HAPUS DATA LAMA DARI LOCALSTORAGE (lebih dari 7 hari)
+        const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+        let cleanedCount = 0;
+        
+        Object.keys(patrolData).forEach(areaKey => {
+            const area = patrolData[areaKey];
+            const areaTimestamp = area.timestamp || 0;
+            
+            // Hapus area yang lebih dari 7 hari
+            if (areaTimestamp < oneWeekAgo) {
+                delete patrolData[areaKey];
+                cleanedCount++;
+                console.log(`🧹 Deleted old area: ${areaKey}`);
+            }
+        });
+        
+        if (cleanedCount > 0) {
+            persistMeta();
+            console.log(`✅ Auto cleanup: Deleted ${cleanedCount} old areas`);
+        }
+        
+        // 2. CLEANUP INDEXEDDB BLOBS YANG TIDAK TERPAKAI
+        if (db) {
+            const usedBlobKeys = new Set();
+            
+            // Kumpulkan semua blob keys yang masih dipakai
+            Object.keys(patrolData).forEach(areaKey => {
+                const area = patrolData[areaKey];
+                area.photos.forEach(photo => {
+                    if (photo && photo.ref) {
+                        usedBlobKeys.add(photo.ref);
+                    }
+                });
+            });
+            
+            // Hapus blob yang tidak terpakai
+            const tx = db.transaction([STORE_BLOBS], 'readonly');
+            const store = tx.objectStore(STORE_BLOBS);
+            const allKeys = await new Promise(resolve => {
+                const request = store.getAllKeys();
+                request.onsuccess = () => resolve(request.result);
+            });
+            
+            let deletedBlobs = 0;
+            for (const key of allKeys) {
+                if (!usedBlobKeys.has(key)) {
+                    await idbDelete(STORE_BLOBS, key);
+                    deletedBlobs++;
+                    console.log(`🗑️ Deleted unused blob: ${key}`);
+                }
+            }
+            
+            if (deletedBlobs > 0) {
+                console.log(`✅ Auto cleanup: Deleted ${deletedBlobs} unused blobs`);
+            }
+        }
+        
+        // 3. CLEAR BROWSER CACHE UNTUK FOTO KITA
+        if ('caches' in window) {
+            try {
+                const cacheNames = await caches.keys();
+                for (const name of cacheNames) {
+                    if (name.includes('patrol') || name.includes('blob')) {
+                        await caches.delete(name);
+                        console.log(`🔥 Deleted cache: ${name}`);
+                    }
+                }
+            } catch (e) {
+                console.log('Cache cleanup skipped:', e);
+            }
+        }
+        
+        // 3.5. CLEANUP MEMORY MANAGER
+        memoryManager.cleanupOldest(20);
+
+        // 4. FORCE GARBAGE COLLECTION (jika available)
+        if (window.gc) {
+            window.gc();
+            console.log('🧹 Forced garbage collection');
+        }
+        
+        console.log('✅ Auto storage cleanup completed');
+        
+    } catch (error) {
+        console.warn('Auto cleanup error:', error);
+    }
+}
+
+// ==================== MANUAL DEEP CLEANUP ====================
+async function manualDeepCleanup() {
+    showOverlay('Deep cleanup - Optimizing storage...');
+    
+    try {
+        // 1. Hapus semua data lebih dari 3 hari
+        const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
+        let deletedAreas = 0;
+        
+        Object.keys(patrolData).forEach(areaKey => {
+            const area = patrolData[areaKey];
+            if ((area.timestamp || 0) < threeDaysAgo) {
+                delete patrolData[areaKey];
+                deletedAreas++;
+            }
+        });
+        
+        // 2. Hapus 50% foto tertua jika masih banyak
+        const totalPhotos = Object.keys(patrolData).reduce((sum, k) => sum + (patrolData[k].photos || []).length, 0);
+        if (totalPhotos > 30) {
+            const targetPhotos = Math.floor(totalPhotos * 0.5);
+            let deletedPhotos = 0;
+            
+            for (const areaKey of Object.keys(patrolData)) {
+                const area = patrolData[areaKey];
+                const toDelete = Math.min(targetPhotos - deletedPhotos, area.photos.length);
+                
+                area.photos.splice(0, toDelete);
+                area.descriptions.splice(0, toDelete);
+                deletedPhotos += toDelete;
+                
+                if (deletedPhotos >= targetPhotos) break;
+            }
+            
+            console.log(`🗑️ Deleted ${deletedPhotos} old photos`);
+        }
+        
+        // 3. Clear semua cache
+        if ('caches' in window) {
+            const cacheNames = await caches.keys();
+            await Promise.all(cacheNames.map(name => caches.delete(name)));
+        }
+        
+        // 4. Optimize IndexedDB
+        if (db) {
+            // Recreate database untuk optimization
+            const dbName = db.name;
+            db.close();
+            indexedDB.deleteDatabase(dbName);
+            
+            // Reopen fresh database
+            await openDB();
+        }
+        
+        persistMeta();
+        renderAreas();
+        
+        hideOverlay();
+        alert(`✅ Deep cleanup selesai!\n\n• ${deletedAreas} area lama dihapus\n• Storage dioptimalkan\n• Cache dibersihkan`);
+        
+    } catch (error) {
+        hideOverlay();
+        alert('❌ Gagal deep cleanup: ' + error.message);
+    }
+}
+
+// ==================== SUPER CLEANUP SYSTEM ====================
+function setupSuperCleanup() {
+  const superCleanupBtn = document.getElementById('superCleanupBtn');
+  
+  superCleanupBtn.addEventListener('click', async () => {
+    // Tampilkan konfirmasi final
+    if (!confirm(`💥 SUPER CLEAN-UP - ONE CLICK SOLUTION\n\nAKAN MELAKUKAN:\n• Hapus SEMUA data patroli\n• Hapus SEMUA foto\n• Reset SEMUA pengaturan\n• Clear SEMUA cache\n• Aplikasi akan reload otomatis\n\nYAKIN INI SOLUSI YANG DIPERLUKAN?`)) {
+      return;
+    }
+    
+    showOverlay('SUPER CLEANUP - Membersihkan semua data...');
+    setOverlayProgress(10);
+    
+    try {
+      // 1. HAPUS SEMUA DATA LOCALSTORAGE
+      const patrolKeys = [
+        'patrol_meta_v1', 'patrol_logo_v1', 'patrol_signature_v1', 
+        'patrol_signature_name', 'patrol_gallery_access', 'logo_upload_password',
+        'bangPriNotif'
+      ];
+      
+      patrolKeys.forEach(key => {
+        localStorage.removeItem(key);
+      });
+      
+      setOverlayProgress(30);
+      
+      // 2. HAPUS SEMUA INDEXEDDB
+      if (db) {
+        try {
+          db.close();
+          await new Promise((resolve) => {
+            const deleteRequest = indexedDB.deleteDatabase(DB_NAME);
+            deleteRequest.onsuccess = () => resolve();
+            deleteRequest.onerror = () => resolve();
+          });
+        } catch (e) {
+          console.warn('IndexedDB deletion error:', e);
+        }
+      }
+      
+      setOverlayProgress(50);
+      
+      // 3. CLEAR ALL CACHES
+      if ('caches' in window) {
+        try {
+          const cacheNames = await caches.keys();
+          await Promise.all(cacheNames.map(name => caches.delete(name)));
+        } catch (e) {
+          console.warn('Cache cleanup error:', e);
+        }
+      }
+      
+      setOverlayProgress(70);
+      
+      // 4. CLEAR SEMUA SESSION DATA
+      sessionStorage.clear();
+      
+      setOverlayProgress(90);
+      
+      // 5. FORCE GARBAGE COLLECTION (jika available)
+      if (window.gc) {
+        window.gc();
+      }
+      
+      setOverlayProgress(100);
+      
+      // 6. RELOAD APLIKASI
+      setTimeout(() => {
+        alert('✅ SUPER CLEANUP BERHASIL!\n\nAplikasi akan reload otomatis...');
+        window.location.reload();
+      }, 1000);
+      
+    } catch (error) {
+      hideOverlay();
+      alert('❌ Gagal SUPER CLEANUP: ' + error.message + '\n\nCoba reload manual halaman.');
+    }
+  });
+}
+
+  // ==================== APPLICATION STATE ====================
+  let patrolData = JSON.parse(localStorage.getItem('patrol_meta_v1')||'{}');
+  let logoData = localStorage.getItem('patrol_logo_v1') || DEFAULT_LOGO_URL; // Prioritaskan custom logo
+  let signatureData = localStorage.getItem('patrol_signature_v1') || null;
+  let signatureName = localStorage.getItem('patrol_signature_name') || '';
+  let galleryAccessGranted = localStorage.getItem('patrol_gallery_access') === 'true' || false;
+  let currentTargetArea = null;
+  
+  // Load logo saat init
+  if(logoData){ 
+    document.getElementById('logoImg').src = logoData; 
+    document.getElementById('logoImg').style.display='block'; 
+  }
+
+  // Load signature name
+  if(signatureName) {
+    document.getElementById('signatureName').value = signatureName;
+  }
+
+  function persistMeta(){ 
+    localStorage.setItem('patrol_meta_v1', JSON.stringify(patrolData)); 
+  }
+
+  // ==================== UI HELPERS ====================
+  const overlay = document.getElementById('overlay');
+  function showOverlay(text){ 
+    document.getElementById('overlayText').innerText = text || 'Memproses...'; 
+    overlay.style.display='flex'; 
+  }
+  function hideOverlay(){ 
+    overlay.style.display='none'; 
+  }
+  function setOverlayProgress(pct){ 
+    document.getElementById('barInner').style.width = Math.max(0,Math.min(100,pct)) + '%'; 
+  }
+
+  const modal = document.getElementById('modal');
+  const modalCard = document.getElementById('modalCard');
+  function showModal(html){ 
+    modalCard.innerHTML = html; 
+    modal.style.display='flex'; 
+  }
+  function hideModal(){ 
+    modal.style.display='none'; 
+    modalCard.innerHTML = ''; 
+  }
+
+  // ==================== IMAGE HELPERS ====================
+  function fileToDataURL(file){ 
+    return new Promise((res)=>{ 
+      const fr=new FileReader(); 
+      fr.onload=()=>res(fr.result); 
+      fr.onerror=()=>res(null); 
+      fr.readAsDataURL(file); 
+    }); 
+  }
+  
+  function compressDataUrl(dataUrl, quality=0.9, maxSize=1920){ 
+    return new Promise((res)=>{ 
+      const img=new Image(); 
+      img.onload=function(){ 
+        let w=img.width,h=img.height; 
+        
+        if(w > maxSize || h > maxSize){
+          if(w>h && w>maxSize){ 
+            h=Math.round(h*maxSize/w); 
+            w=maxSize; 
+          } else if(h>=w && h>maxSize){ 
+            w=Math.round(w*maxSize/h); 
+            h=maxSize; 
+          } 
+        }
+        
+        const c=document.createElement('canvas'); 
+        c.width=w; 
+        c.height=h; 
+        const ctx=c.getContext('2d'); 
+        
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img,0,0,w,h); 
+        try{ 
+          res(c.toDataURL('image/jpeg', quality)); 
+        }catch(e){ 
+          res(dataUrl); 
+        } 
+      }; 
+      img.onerror=function(){ 
+        res(dataUrl); 
+      }; 
+      img.src=dataUrl; 
+    }); 
+  }
+
+  // ==================== LOGO SYSTEM DENGAN PASSWORD ====================
+// Cek apakah password sudah disimpan sebelumnya
+const savedLogoPassword = localStorage.getItem('logo_upload_password');
+if (savedLogoPassword) {
+    document.getElementById('logoPassword').value = savedLogoPassword;
+    
+    // Auto show upload section jika password benar
+    if (savedLogoPassword === LOGO_UPLOAD_PASSWORD) {
+        document.getElementById('logoUploadSection').style.display = 'block';
+    }
+}
+
+document.getElementById('logoPassword').addEventListener('input', function(e) {
+    const password = e.target.value;
+    const logoUploadSection = document.getElementById('logoUploadSection');
+    
+    // Simpan password ke localStorage
+    localStorage.setItem('logo_upload_password', password);
+    
+    if (password === LOGO_UPLOAD_PASSWORD) {
+        logoUploadSection.style.display = 'block';
+        alert('✅ Password logo benar! Sekarang bisa upload logo custom.');
+    } else {
+        logoUploadSection.style.display = 'none';
+    }
+});
+
+  document.getElementById('uploadLogo').addEventListener('change', async (e)=>{
+    const file = e.target.files[0]; 
+    if(!file) return;
+    
+    // Validasi file size
+    if(file.size > 2 * 1024 * 1024) {
+      alert('❌ File terlalu besar! Maksimal 2MB.');
+      return;
+    }
+    
+    const d = await fileToDataURL(file); 
+    logoData = d; 
+    localStorage.setItem('patrol_logo_v1', d); 
+    document.getElementById('logoImg').src = d; 
+    document.getElementById('logoImg').style.display='block';
+    alert('✅ Logo custom berhasil diupload!');
+  });
+
+  // ==================== SIGNATURE PAD DENGAN PERBAIKAN SCROLL ====================
+  const signatureCanvas = document.getElementById('signaturePad');
+  const signatureCtx = signatureCanvas.getContext('2d');
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+
+  function resizeCanvas() {
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    signatureCanvas.width = signatureCanvas.offsetWidth * ratio;
+    signatureCanvas.height = signatureCanvas.offsetHeight * ratio;
+    signatureCtx.scale(ratio, ratio);
+    signatureCtx.lineJoin = 'round';
+    signatureCtx.lineCap = 'round';
+    signatureCtx.lineWidth = 2;
+    signatureCtx.strokeStyle = '#000000';
+    
+    signatureCtx.fillStyle = '#ffffff';
+    signatureCtx.fillRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+  }
+
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  function startDrawing(e) {
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+    
+    // Prevent scroll saat menggambar
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+  }
+
+  function draw(e) {
+    if (!isDrawing) return;
+    signatureCtx.beginPath();
+    signatureCtx.moveTo(lastX, lastY);
+    signatureCtx.lineTo(e.offsetX, e.offsetY);
+    signatureCtx.stroke();
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+  }
+
+  function stopDrawing() {
+    isDrawing = false;
+    
+    // Restore scroll
+    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
+  }
+
+  function getTouchPos(canvas, touchEvent) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: touchEvent.touches[0].clientX - rect.left,
+      y: touchEvent.touches[0].clientY - rect.top
+    };
+  }
+
+  signatureCanvas.addEventListener('mousedown', startDrawing);
+  signatureCanvas.addEventListener('mousemove', draw);
+  signatureCanvas.addEventListener('mouseup', stopDrawing);
+  signatureCanvas.addEventListener('mouseout', stopDrawing);
+
+  signatureCanvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const touch = getTouchPos(signatureCanvas, e);
+    startDrawing({ offsetX: touch.x, offsetY: touch.y });
+  });
+
+  signatureCanvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    const touch = getTouchPos(signatureCanvas, e);
+    draw({ offsetX: touch.x, offsetY: touch.y });
+  });
+
+  signatureCanvas.addEventListener('touchend', stopDrawing);
+
+  document.getElementById('clearSignature').addEventListener('click', () => {
+    signatureCtx.fillStyle = '#ffffff';
+    signatureCtx.fillRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+  });
+
+  document.getElementById('saveSignature').addEventListener('click', () => {
+    const nameInput = document.getElementById('signatureName').value.trim();
+    if (!nameInput) {
+      alert('⚠️ Harap masukkan nama lengkap terlebih dahulu!');
+      document.getElementById('signatureName').focus();
+      return;
+    }
+    
+    signatureData = signatureCanvas.toDataURL('image/png');
+    signatureName = nameInput;
+    localStorage.setItem('patrol_signature_v1', signatureData);
+    localStorage.setItem('patrol_signature_name', signatureName);
+    alert(`✅ Tanda tangan ${signatureName} berhasil disimpan!`);
+  });
+
+  if (signatureData) {
+    const img = new Image();
+    img.onload = function() {
+      signatureCtx.drawImage(img, 0, 0);
+    };
+    img.src = signatureData;
+  }
+
+  // ==================== TAB SYSTEM ====================
+  window.switchToTab = function(tabName) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    
+    document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
+    document.getElementById(`${tabName}Tab`).classList.add('active');
+    
+    if (tabName === 'camera') {
+      updateAreaSelector();
+    }
+    
+    if (tabName === 'cleanup') {
+      updateCleanupStats();
+    }
+  }
+
+  function setupTabs() {
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        tab.classList.add('active');
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(tabId + 'Tab').classList.add('active');
+        
+        updateAreaSelector();
+
+        if (tabId === 'cleanup') {
+          updateCleanupStats();
+        }
+      });
+    });
+  }
+
+  // ==================== AREA MANAGEMENT ====================
+  function updateAreaSelector() {
+    const areaSelector = document.getElementById('areaSelector');
+    const targetAreaSelect = document.getElementById('targetAreaSelect');
+    const areaKeys = Object.keys(patrolData);
+    
+    if (areaKeys.length > 0) {
+      areaSelector.style.display = 'block';
+      targetAreaSelect.innerHTML = '<option value="">-- Pilih Area --</option>';
+      
+      areaKeys.forEach(key => {
+        const area = patrolData[key];
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = `Area ${parseInt(key)+1}: ${area.name || 'Area'}`;
+        targetAreaSelect.appendChild(option);
+      });
+      
+      if (!currentTargetArea && areaKeys.length > 0) {
+        currentTargetArea = areaKeys[areaKeys.length - 1];
+        targetAreaSelect.value = currentTargetArea;
+      } else if (currentTargetArea) {
+        targetAreaSelect.value = currentTargetArea;
+      }
+    } else {
+      areaSelector.style.display = 'none';
+      currentTargetArea = null;
+    }
+  }
+
+  // ==================== NATIVE CAMERA SYSTEM ====================
+  function setupNativeCamera() {
+    const openCameraBtn = document.getElementById('openNativeCamera');
+    const cameraInput = document.getElementById('nativeCameraInput');
+    const targetAreaSelect = document.getElementById('targetAreaSelect');
+
+    targetAreaSelect.addEventListener('change', (e) => {
+      currentTargetArea = e.target.value;
+    });
+
+    openCameraBtn.addEventListener('click', () => {
+      const areaKeys = Object.keys(patrolData);
+      if (areaKeys.length === 0) {
+        alert('⚠️ Buat area dulu dengan klik "Tambah Area Baru (Kamera)" sebelum mengambil foto!');
+        return;
+      }
+      
+      if (!currentTargetArea) {
+        alert('⚠️ Pilih area terlebih dahulu!');
+        return;
+      }
+      
+      cameraInput.click();
+    });
+
+    cameraInput.addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      showOverlay('Memproses foto dari kamera...');
+      
+      try {
+        const dataUrl = await fileToDataURL(file);
+        const compressedDataUrl = await compressDataUrl(dataUrl, 0.9, 1920);
+        addPhotoToArea(compressedDataUrl, currentTargetArea);
+        hideOverlay();
+      } catch (error) {
+        hideOverlay();
+        alert('❌ Gagal memproses foto: ' + error.message);
+      }
+      
+      cameraInput.value = '';
+    });
+  }
+
+  function addPhotoToArea(dataUrl, targetAreaKey) {
+    if (!patrolData[targetAreaKey]) {
+      alert('❌ Area tidak ditemukan!');
+      return;
+    }
+    
+    patrolData[targetAreaKey].photos.push(dataUrl);
+    patrolData[targetAreaKey].descriptions.push('TERKENDALI AMAN');
+    persistMeta();
+    renderAreas();
+    
+    alert('✅ Foto berhasil ditambahkan ke ' + patrolData[targetAreaKey].name);
+  }
+
+  // ==================== GALLERY ACCESS SYSTEM ====================
+  function setupGalleryAccess() {
+    const unlockBtn = document.getElementById('unlockGalleryBtn');
+    const galleryAccess = document.getElementById('galleryAccess');
+    
+    if (galleryAccessGranted) {
+      galleryAccess.style.display = 'block';
+    }
+    
+    unlockBtn.addEventListener('click', () => {
+      const password = document.getElementById('galleryPassword').value;
+      if (password === MASTER_PASSWORD) {
+        galleryAccessGranted = true;
+        localStorage.setItem('patrol_gallery_access', 'true');
+        galleryAccess.style.display = 'block';
+        alert('✅ Akses galeri berhasil dibuka!');
+      } else {
+        alert('❌ Password salah! Akses galeri ditolak.');
+      }
+    });
+  }
+
+  // ==================== RENDER AREAS UI ====================
+  function renderAreas(){
+    const container = document.getElementById('areas'); container.innerHTML='';
+    const keys = Object.keys(patrolData);
+    if(keys.length===0){ 
+      container.innerHTML = '<div class="card small">Belum ada area. Klik "Tambah Area Baru (Kamera)" untuk membuat area pertama, lalu gunakan kamera HP untuk mengambil foto.</div>'; 
+      return; 
+    }
+    keys.forEach(k=>{
+      const a = patrolData[k];
+      const div = document.createElement('div'); div.className='area'; div.dataset.idx = k;
+      
+      const galleryButton = galleryAccessGranted ? 
+        `<button class="btn btn-ghost btn-add" data-idx="${k}">➕ Tambah Foto (Gallery - Multi)</button><input type="file" accept="image/*" multiple style="display:none" class="file-input" data-idx="${k}"/>` : 
+        `<button class="btn btn-ghost" disabled>🔒 Galeri Terkunci</button>`;
+      
+      div.innerHTML = `
+        <h3>Area ${parseInt(k)+1}: <input data-field="name" value="${a.name||'Area '+(parseInt(k)+1)}" style="border:none;background:transparent;font-weight:700;font-size:14px" /></h3>
+        <div style="margin-bottom:6px"><label class="small">Catatan Area</label><textarea data-field="notes" placeholder="Tambahkan catatan untuk area ini...">${a.notes||''}</textarea></div>
+        <div style="margin-bottom:6px"><label class="small">Deskripsi Global</label><textarea data-field="global" placeholder="Deskripsi umum area patroli...">${a.globalDescription||''}</textarea></div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          ${galleryButton}
+          <button class="btn btn-ghost btn-remove" data-idx="${k}">🗑️ Hapus Area</button>
+        </div>
+        <div class="photo-grid" data-photos></div>
+        <div class="small" style="margin-top:8px;color:#6b7280">${(a.photos||[]).length} foto di area ini</div>
+      `;
+      container.appendChild(div);
+
+      const nameInput = div.querySelector('[data-field="name"]');
+      nameInput.addEventListener('input', (e)=>{ a.name = e.target.value; persistMeta(); });
+      const notes = div.querySelector('[data-field="notes"]');
+      notes.addEventListener('input', (e)=>{ a.notes = e.target.value; persistMeta(); });
+      const global = div.querySelector('[data-field="global"]');
+      global.addEventListener('input', (e)=>{ a.globalDescription = e.target.value; persistMeta(); });
+
+      if (galleryAccessGranted) {
+        const fileInput = div.querySelector('.file-input');
+        const addBtn = div.querySelector('.btn-add');
+        addBtn.addEventListener('click', ()=> fileInput.click());
+
+        fileInput.addEventListener('change', async (ev)=>{
+          const files = Array.from(ev.target.files || []);
+          if(!files.length) return;
+          showOverlay(`Memproses ${files.length} foto...`); setOverlayProgress(0);
+          const CHUNK = 4;
+          let processed = 0;
+          for(let i=0;i<files.length;i+=CHUNK){
+            const chunk = files.slice(i,i+CHUNK);
+            await Promise.all(chunk.map(async (f)=>{
+              try{
+                const data = await fileToDataURL(f);
+                const comp = await compressDataUrl(data, 0.9, 1920);
+                let key = null;
+                if(db){
+                  try{
+                    const blob = await (await fetch(comp)).blob();
+                    key = 'b_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+                    await idbPut(STORE_BLOBS, key, blob);
+                    await idbPut(STORE_META, key, { name: f.name, ts: new Date().toISOString() });
+                    patrolData[k].photos.push({ ref:key });
+                  }catch(e){
+                    patrolData[k].photos.push(comp);
+                  }
+                } else {
+                  patrolData[k].photos.push(comp);
+                }
+                patrolData[k].descriptions.push('TERKENDALI AMAN');
+                persistMeta();
+              }catch(err){ console.warn('file err', err); }
+            }));
+            processed += chunk.length;
+            setOverlayProgress(Math.round((processed/files.length)*100));
+            await new Promise(r=>setTimeout(r,150));
+          }
+          hideOverlay();
+          fileInput.value = '';
+          renderPhotosForArea(k);
+        });
+      }
+
+      div.querySelector('.btn-remove').addEventListener('click', ()=>{
+        if(!confirm(`Hapus Area ${parseInt(k)+1} dan semua fotonya?`)) return;
+        delete patrolData[k];
+        persistMeta();
+        renderAreas();
+        updateAreaSelector();
+      });
+
+      renderPhotosForArea(k);
+    });
+    
+    updateAreaSelector();
+  }
+
+  async function renderPhotosForArea(k){
+    const area = patrolData[k]; 
+    if(!area) return;
+    
+    const container = document.querySelector('.area[data-idx="'+k+'"] .photo-grid');
+    if(!container) return;
+    
+    // Clear previous content dan revoke blob URLs
+    container.querySelectorAll('img').forEach(img => {
+        if (img.src && img.src.startsWith('blob:')) {
+            URL.revokeObjectURL(img.src);
+        }
+    });
+    container.innerHTML = '';
+    
+    // Virtual scroll untuk performance - limit render
+    const photos = area.photos || [];
+    const visiblePhotos = photos.slice(0, 50); // Render maksimal 50 foto sekaligus
+    
+    for(let i = 0; i < visiblePhotos.length; i++){
+        const p = photos[i];
+        const thumb = document.createElement('div'); 
+        thumb.className = 'photo-thumb';
+        
+        const img = document.createElement('img');
+        const blobKey = `area_${k}_photo_${i}`;
+        
+        if(p && typeof p === 'object' && p.ref){
+            const blob = await idbGet(STORE_BLOBS, p.ref);
+            if(blob) {
+                const blobUrl = URL.createObjectURL(blob);
+                memoryManager.addBlobUrl(blobKey, blobUrl);
+                img.src = blobUrl;
+            }
+        } else if(typeof p === 'string') {
+            img.src = p;
+        }
+        
+        thumb.appendChild(img);
+        
+        // Update usage tracking saat interaksi
+        thumb.addEventListener('click', () => {
+            memoryManager.updateUsage(blobKey);
+            openPhotoModal(k, i);
+        });
+        
+        thumb.addEventListener('contextmenu', (ev) => {
+            ev.preventDefault();
+            memoryManager.revokeBlobUrl(blobKey);
+            if(confirm('Hapus foto ini?')){ 
+                area.photos.splice(i,1); 
+                area.descriptions.splice(i,1); 
+                persistMeta(); 
+                renderPhotosForArea(k); 
+            }
+        });
+        
+        container.appendChild(thumb);
+    }
+    
+    // Show "load more" indicator jika ada banyak foto
+    if (photos.length > visiblePhotos.length) {
+        const loadMore = document.createElement('div');
+        loadMore.className = 'load-more-btn';
+        loadMore.style.cssText = 'width:100%; padding:12px; text-align:center; background:#f1f5f9; border-radius:8px; margin-top:8px; cursor:pointer; font-weight:600; color:#64748b;';
+        loadMore.innerHTML = `📁 Load ${photos.length - visiblePhotos.length} foto lagi...`;
+        loadMore.addEventListener('click', () => {
+            alert('Untuk performance, hanya menampilkan 50 foto pertama. Hapus beberapa foto lama untuk melihat yang baru.');
+        });
+        container.appendChild(loadMore);
+    }
+}
+
+  function openPhotoModal(k, idx){
+    const a = patrolData[k];
+    const p = a.photos[idx];
+    const blobKey = `modal_area_${k}_photo_${idx}`;
+    
+    // Cleanup previous modal blob
+    memoryManager.revokeBlobUrl('current_modal');
+    
+    const currentDesc = a.descriptions[idx] || 'TERKENDALI AMAN';
+    const html = `<div style="display:flex;gap:12px;align-items:flex-start">
+      <div style="flex:1;min-width:240px">
+        <img id="modalImg" style="max-width:100%;border-radius:6px" />
+        <div class="small" style="margin-top:8px;color:#6b7280">
+          💡 Kosongkan deskripsi untuk menggunakan "TERKENDALI AMAN"
+        </div>
+      </div>
+      <div style="flex:1">
+        <label>Deskripsi panjang</label>
+        <textarea id="modalDesc" style="width:100%;height:260px;border:1px solid #e6e9ee;padding:8px;border-radius:8px" placeholder="Kosongkan untuk 'TERKENDALI AMAN'">${currentDesc === 'TERKENDALI AMAN' ? '' : currentDesc}</textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="saveDesc" class="btn btn-primary">Simpan</button>
+          <button id="delPhoto" class="btn btn-ghost">Hapus</button>
+          <button id="closeModal" class="btn btn-ghost">Tutup</button>
+        </div>
+      </div>
+    </div>`;
+    
+    showModal(html);
+    
+    (async ()=>{
+        const modalImg = document.getElementById('modalImg');
+        if(p && typeof p === 'object' && p.ref){ 
+            const blob = await idbGet(STORE_BLOBS, p.ref); 
+            if(blob) {
+                const blobUrl = URL.createObjectURL(blob);
+                memoryManager.addBlobUrl('current_modal', blobUrl);
+                modalImg.src = blobUrl;
+            }
+        }
+        else if(typeof p === 'string') modalImg.src = p;
+        
+        document.getElementById('saveDesc').addEventListener('click', ()=>{
+            const newDesc = document.getElementById('modalDesc').value.trim();
+            a.descriptions[idx] = newDesc === '' ? 'TERKENDALI AMAN' : newDesc;
+            persistMeta();
+            hideModal(); 
+            renderPhotosForArea(k);
+        });
+        
+        document.getElementById('delPhoto').addEventListener('click', async ()=>{
+            if(!confirm('Hapus foto ini permanen?')) return;
+            const ref = p && p.ref ? p.ref : null;
+            if(ref) {
+                await idbDelete(STORE_BLOBS, ref);
+                memoryManager.revokeBlobUrl(blobKey);
+            }
+            a.photos.splice(idx,1); 
+            a.descriptions.splice(idx,1);
+            persistMeta(); 
+            hideModal(); 
+            renderPhotosForArea(k);
+        });
+        
+        document.getElementById('closeModal').addEventListener('click', ()=> {
+            memoryManager.revokeBlobUrl('current_modal');
+            hideModal();
+        });
+    })();
+}
+
+  // ==================== AREA MANAGEMENT ====================
+  document.getElementById('addAreaBtn').addEventListener('click', ()=>{
+    if (!galleryAccessGranted) {
+      alert('🔒 Harus buka akses galeri terlebih dahulu!');
+      return;
+    }
+    addNewArea();
+  });
+
+  document.getElementById('addAreaCameraBtn').addEventListener('click', ()=>{
+    addNewArea();
+  });
+
+  function addNewArea() {
+  const id = Object.keys(patrolData).length;
+  patrolData[id] = { 
+    name: `Area ${id+1}`, 
+    notes: '', 
+    globalDescription: '', 
+    photos: [], 
+    descriptions: [],
+    timestamp: Date.now()  // <- TAMBAH INI
+  };
+    persistMeta();
+    renderAreas();
+    
+    currentTargetArea = id.toString();
+    updateAreaSelector();
+    
+    alert(`✅ Area ${id+1} berhasil ditambahkan! Sekarang Anda bisa mengambil foto dengan kamera HP.`);
+  }
+
+  // ==================== CLEAN-UP SYSTEM ====================
+  function setupAutoCleanup() {
+    const cleanupStats = document.getElementById('cleanupStats');
+    const cleanupStatus = document.getElementById('cleanupStatus');
+    const quickCleanupBtn = document.getElementById('quickCleanupBtn');
+    const deepCleanupBtn = document.getElementById('deepCleanupBtn');
+    const checkStorageBtn = document.getElementById('checkStorageBtn');
+    const compressAllBtn = document.getElementById('compressAllBtn');
+    const backupDataBtn = document.getElementById('backupDataBtn');
+    const startPatroliBtn = document.getElementById('startPatroliBtn');
+    const addFirstAreaBtn = document.getElementById('addFirstAreaBtn');
+    const goToCameraBtn = document.getElementById('goToCameraBtn');
+    const manualCleanupBtn = document.getElementById('manualCleanupBtn');
+
+    async function updateCleanupStats() {
+      const areas = Object.keys(patrolData).length;
+      let totalPhotos = 0;
+      let totalStorage = 0;
+      let indexedDBCount = 0;
+
+      Object.keys(patrolData).forEach(key => {
+        const area = patrolData[key];
+        totalPhotos += (area.photos || []).length;
+        
+        (area.photos || []).forEach(photo => {
+          if (typeof photo === 'string') {
+            totalStorage += photo.length * 0.75;
+          } else if (photo && photo.ref) {
+            totalStorage += 800000;
+          }
+        });
+      });
+
+      if (db) {
+        try {
+          const tx = db.transaction([STORE_BLOBS], 'readonly');
+          const store = tx.objectStore(STORE_BLOBS);
+          const countRequest = store.count();
+          indexedDBCount = await new Promise(resolve => {
+            countRequest.onsuccess = () => resolve(countRequest.result);
+            countRequest.onerror = () => resolve(0);
+          });
+        } catch (e) {
+          console.warn('Gagal menghitung IndexedDB:', e);
+        }
+      }
+
+      document.getElementById('statAreas').textContent = areas;
+      document.getElementById('statPhotos').textContent = totalPhotos;
+      document.getElementById('statStorage').textContent = (totalStorage / 1024 / 1024).toFixed(2) + ' MB';
+      document.getElementById('statIndexedDB').textContent = indexedDBCount;
+
+      const indexedDBStat = document.getElementById('statIndexedDB').parentElement;
+      if (indexedDBCount > 50) {
+        indexedDBStat.classList.add('warning');
+      } else {
+        indexedDBStat.classList.remove('warning');
+      }
+    }
+
+    function showStatus(message, type = 'info') {
+      cleanupStatus.style.display = 'block';
+      cleanupStatus.textContent = '';
+      cleanupStatus.innerHTML = message;
+      
+      cleanupStatus.className = 'status-box';
+      if (type === 'success') cleanupStatus.classList.add('status-success');
+      else if (type === 'error') cleanupStatus.classList.add('status-error');
+      else cleanupStatus.classList.add('status-info');
+    }
+
+    async function quickCleanup() {
+      const areas = Object.keys(patrolData).length;
+      let totalPhotos = 0;
+      Object.keys(patrolData).forEach(key => {
+        totalPhotos += (patrolData[key].photos || []).length;
+      });
+
+      if (areas === 0 && totalPhotos === 0) {
+        showStatus('✅ Tidak ada data patroli yang perlu dibersihkan.', 'info');
+        return;
+      }
+
+      if (!confirm(`🚀 QUICK CLEAN-UP\n\nAkan menghapus:\n• ${areas} area patroli\n• ${totalPhotos} foto\n\nLogo dan tanda tangan akan tetap disimpan.\n\nLanjutkan?`)) {
+        return;
+      }
+
+      showOverlay('Melakukan Quick Clean-Up...');
+      
+      try {
+        patrolData = {};
+        persistMeta();
+        
+        if (db) {
+          const tx = db.transaction([STORE_BLOBS, STORE_META], 'readwrite');
+          tx.objectStore(STORE_BLOBS).clear();
+          tx.objectStore(STORE_META).clear();
+        }
+        
+        currentTargetArea = null;
+        renderAreas();
+        updateAreaSelector();
+        
+        hideOverlay();
+        showStatus(`✅ <strong>Quick Clean-Up Berhasil!</strong><br>Dihapus: ${areas} area dan ${totalPhotos} foto.<br>Logo dan tanda tangan tetap tersimpan.`, 'success');
+        updateCleanupStats();
+        
+      } catch (error) {
+        hideOverlay();
+        showStatus('❌ <strong>Gagal melakukan Quick Clean-Up:</strong> ' + error.message, 'error');
+      }
+    }
+
+    async function deepCleanup() {
+      if (!confirm(`💀 DEEP CLEAN-UP\n\nHapus SEMUA DATA termasuk:\n• Semua area patroli\n• Semua foto\n• Logo\n• Tanda tangan\n• Password akses\n\nAplikasi akan kembali seperti baru!\n\nYakin ingin melanjutkan?`)) {
+        return;
+      }
+
+      showOverlay('Melakukan Deep Clean-Up...');
+      
+      try {
+        patrolData = {};
+        logoData = DEFAULT_LOGO_URL;
+        signatureData = null;
+        signatureName = '';
+        galleryAccessGranted = false;
+        currentTargetArea = null;
+        
+        localStorage.removeItem('patrol_meta_v1');
+        localStorage.removeItem('patrol_logo_v1');
+        localStorage.removeItem('patrol_signature_v1');
+        localStorage.removeItem('patrol_signature_name');
+        localStorage.removeItem('patrol_gallery_access');
+        
+        if (db) {
+          const tx = db.transaction([STORE_BLOBS, STORE_META], 'readwrite');
+          tx.objectStore(STORE_BLOBS).clear();
+          tx.objectStore(STORE_META).clear();
+        }
+        
+        document.getElementById('logoImg').src = DEFAULT_LOGO_URL;
+        document.getElementById('galleryAccess').style.display = 'none';
+        document.getElementById('galleryPassword').value = '';
+        document.getElementById('signatureName').value = '';
+        document.getElementById('logoPassword').value = '';
+        document.getElementById('logoUploadSection').style.display = 'none';
+        
+        signatureCtx.fillStyle = '#ffffff';
+        signatureCtx.fillRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+        
+        renderAreas();
+        updateAreaSelector();
+        
+        hideOverlay();
+        showStatus('✅ <strong>Deep Clean-Up Berhasil!</strong><br>Semua data telah dihapus. Aplikasi siap untuk patroli baru.', 'success');
+        updateCleanupStats();
+        
+      } catch (error) {
+        hideOverlay();
+        showStatus('❌ <strong>Gagal melakukan Deep Clean-Up:</strong> ' + error.message, 'error');
+      }
+    }
+
+    quickCleanupBtn.addEventListener('click', quickCleanup);
+    deepCleanupBtn.addEventListener('click', deepCleanup);
+    
+    checkStorageBtn.addEventListener('click', async () => {
+      showOverlay('Memeriksa storage...');
+      await updateCleanupStats();
+      hideOverlay();
+      showStatus('🔍 <strong>Pemeriksaan Storage Selesai</strong><br>Data terbaru telah ditampilkan.', 'info');
+    });
+
+    compressAllBtn.addEventListener('click', async () => {
+      showOverlay('Mengompres semua foto...');
+      await compressAllPhotos();
+      hideOverlay();
+      showStatus('✅ <strong>Kompresi Berhasil!</strong><br>Semua foto telah dikompresi dengan kualitas terjaga.', 'success');
+      updateCleanupStats();
+    });
+
+    backupDataBtn.addEventListener('click', async () => {
+      showOverlay('Membuat backup data...');
+      await backupData();
+      hideOverlay();
+    });
+
+    startPatroliBtn.addEventListener('click', () => {
+      switchToTab('camera');
+      showStatus('🎯 <strong>Siap Memulai Patroli!</strong><br>Pilih "Tambah Area Baru" lalu gunakan kamera HP.', 'success');
+    });
+
+    addFirstAreaBtn.addEventListener('click', () => {
+      addNewArea();
+      showStatus('✅ <strong>Area pertama berhasil ditambahkan!</strong><br>Sekarang bisa mengambil foto dengan kamera HP.', 'success');
+    });
+
+    goToCameraBtn.addEventListener('click', () => {
+      switchToTab('camera');
+    });
+
+    manualCleanupBtn.addEventListener('click', () => {
+      memoryManager.fullCleanup();
+      showStatus('🧹 <strong>Memory Cleanup Berhasil!</strong><br>Browser memory telah dibersihkan.', 'success');
+    });
+
+    updateCleanupStats();
+  }
+
+  async function compressAllPhotos() {
+    const keys = Object.keys(patrolData); 
+    let total = 0;
+    keys.forEach(k => total += (patrolData[k].photos || []).length);
+    
+    if (total === 0) {
+      showStatus('ℹ️ Tidak ada foto yang perlu dikompres.', 'info');
+      return;
+    }
+
+    let processed = 0;
+    for (const k of keys) {
+      for (let i = 0; i < (patrolData[k].photos || []).length; i++) {
+        try {
+          const p = patrolData[k].photos[i];
+          if (typeof p === 'string') {
+            const re = await compressDataUrl(p, 0.85, 1600);
+            patrolData[k].photos[i] = re;
+          }
+          processed++;
+          setOverlayProgress(Math.round((processed / Math.max(1, total)) * 100));
+        } catch (e) {
+          console.warn('Gagal mengompres foto:', e);
+        }
+      }
+    }
+    persistMeta();
+    renderAreas();
+  }
+
+  async function backupData() {
+    const meta = JSON.stringify({
+      patrolData,
+      logoData: logoData ? 'LOGO_AVAILABLE' : null,
+      signatureData: signatureData ? 'SIGNATURE_AVAILABLE' : null,
+      signatureName,
+      galleryAccessGranted,
+      timestamp: new Date().toISOString(),
+      totalAreas: Object.keys(patrolData).length,
+      totalPhotos: Object.keys(patrolData).reduce((sum, k) => sum + (patrolData[k].photos || []).length, 0)
+    }, null, 2);
+
+    try {
+      await navigator.clipboard.writeText(meta);
+      showStatus('✅ <strong>Backup Berhasil!</strong><br>Data meta telah disalin ke clipboard.', 'success');
+    } catch (e) {
+      const backupText = `=== BACKUP DATA PATROLI ===\nTanggal: ${new Date().toLocaleString('id-ID')}\n${meta}`;
+      prompt('Salin manual backup data berikut:', backupText);
+      showStatus('📋 <strong>Backup Siap!</strong><br>Data telah disiapkan untuk disalin manual.', 'info');
+    }
+  }
+
+  // ==================== PDF GENERATION - DASHBOARD STYLE ====================
+  document.getElementById('genPdfBtn').addEventListener('click', async ()=>{
+    try{
+      const jsPDFCtor = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : (window.jsPDF ? window.jsPDF : null);
+      if(!jsPDFCtor){ 
+        alert('jsPDF tidak tersedia. Koneksi internet harus aktif.'); 
+        return; 
+      }
+      
+      showOverlay('Mempersiapkan PDF Dashboard...'); 
+      setOverlayProgress(5);
+      
+      const pdf = new jsPDFCtor('p','mm','a4'); 
+      const pageW = pdf.internal.pageSize.getWidth(); 
+      const pageH = pdf.internal.pageSize.getHeight(); 
+      const margin = 15;
+      
+      const petugas = document.getElementById('petugasName').value || 'Petugas_Tidak_Terisi';
+      const tanggal = document.getElementById('tanggal').value || new Date().toISOString().split('T')[0];
+      const jam = document.getElementById('jam').value || new Date().toTimeString().slice(0,5);
+      
+    // Cover Page - PROFESSIONAL VERSION
+pdf.setFillColor(11,61,145); 
+pdf.rect(0,0,pageW,90,'F'); 
+
+// Header dengan logo dan title
+const headerHeight = 25;
+pdf.setFillColor(255,255,255,0.1);
+pdf.rect(0, 0, pageW, headerHeight, 'F');
+
+// Logo kiri
+pdf.setFillColor(255,255,255);
+pdf.rect(margin, 5, 15, 15, 'F');
+pdf.setTextColor(11,61,145);
+pdf.setFontSize(8);
+pdf.text("SP", margin + 7.5, 12.5, {align: 'center'});
+
+// Title header  
+pdf.setTextColor(255,255,255);
+pdf.setFontSize(12);
+pdf.text("SECURITY PATROLI SYSTEM", pageW/2, 12.5, {align: 'center'});
+
+// Tanggal header kanan
+pdf.setFontSize(8);
+pdf.text(new Date().toLocaleDateString('id-ID'), pageW - margin, 12.5, {align: 'right'});
+
+// Konten utama cover
+pdf.setFontSize(20); 
+pdf.setTextColor(255,255,255); 
+pdf.text(`LAPORAN PATROLI`, pageW/2, 50, {align:'center'});
+pdf.setFontSize(16); 
+pdf.text(`Petugas: ${petugas}`, pageW/2, 65, {align:'center'});
+pdf.setFontSize(12);
+pdf.text(`Tanggal: ${tanggal} | Jam: ${jam}`, pageW/2, 75, {align:'center'});
+      
+     // Logo - SIMPLE FIX
+const logoW = pageW * 0.75; 
+const logoH = pageH * 0.45; 
+const logoX = (pageW-logoW)/2; 
+const logoY = 110;
+
+try{
+  // Always use logoData, which should be your DEFAULT_LOGO_URL
+  pdf.addImage(logoData, 'JPEG', logoX, logoY, logoW, logoH);
+}catch(e){
+  console.warn('Gagal menambahkan logo:', e);
+  // Fallback placeholder
+  pdf.setFillColor(11, 61, 145);
+  pdf.rect(logoX, logoY, logoW, logoH, 'F');
+  pdf.setTextColor(255, 255, 255);
+  pdf.setFontSize(24);
+  pdf.text("SECURITY PRO", logoX + logoW/2, logoY + logoH/2, {align: 'center'});
+}
+
+// Function untuk placeholder logo default
+function addDefaultLogoPlaceholder(pdf, x, y, w, h) {
+  // Box background
+  pdf.setFillColor(11, 61, 145);
+  pdf.rect(x, y, w, h, 'F');
+  
+  // Text logo
+  pdf.setTextColor(255, 255, 255);
+  pdf.setFontSize(24);
+  pdf.text("SECURITY PRO", x + w/2, y + h/2, {align: 'center'});
+  
+  pdf.setFontSize(12);
+  pdf.text("PATROLI SYSTEM", x + w/2, y + h/2 + 15, {align: 'center'});
+}
+ 
+       pdf.setFontSize(24); 
+      pdf.setTextColor(20,30,48); 
+      pdf.text('LAPORAN PATROLI SECURITY', pageW/2, logoY+logoH+30, {align:'center'});
+      pdf.setFontSize(12); 
+      pdf.setTextColor(110,110,110); 
+      pdf.text(`Generated: ${new Date().toLocaleString('id-ID')}`, pageW/2, logoY+logoH+44, {align:'center'});
+      
+      // ==================== DASHBOARD CONTENT ====================
+// BUAT HALAMAN BARU UNTUK CONTENT - JANGAN LANGSUNG TULIS DI COVER
+pdf.addPage();
+let currentPage = 2;
+let y = margin;
+
+const totalAreas = Object.keys(patrolData).length;
+let processedAreas = 0;
+
+// Area colors
+const areaColors = [
+  [59, 130, 246], [16, 185, 129], [139, 92, 246], 
+  [245, 158, 11], [236, 72, 153], [14, 165, 233]
+];
+
+for(const key of Object.keys(patrolData)){
+  const area = patrolData[key]; 
+  if(!area) continue;
+  
+  // Area Header - CEK JIKA BUTUH HALAMAN BARU
+  if(currentPage > 2 || y > margin + 50) { // Kasih buffer 50px
+    if(y > margin) { // Jika bukan di awal halaman, buat halaman baru
+      pdf.addPage();
+      currentPage++;
+      y = margin;
+    }
+  }
+  
+  // ... (sisa code tetap sama seperti sebelumnya)
+        
+        // ==================== PHOTOS DASHBOARD STYLE ====================
+        for(let i=0; i < (area.photos||[]).length; i++){
+          const p = area.photos[i];
+          const description = area.descriptions[i] || 'TERKENDALI AMAN';
+          
+          // CHECK PAGE BREAK - hitung estimated height needed
+          const photoHeight = 120; // Fixed height untuk photo
+          const descLines = pdf.splitTextToSize(description, pageW - margin*2 - 4);
+          const descHeight = descLines.length * 4 + 16; // Estimate deskripsi height
+          
+          const totalNeededHeight = photoHeight + descHeight + 20;
+          
+          // Jika tidak muat di halaman ini, buat page baru
+          if(y + totalNeededHeight > pageH - 20) {
+            pdf.addPage();
+            currentPage++;
+            y = margin;
+          }
+          
+          setOverlayProgress(5 + (processedAreas/totalAreas * 90) + (i/area.photos.length * (90/totalAreas)));
+          
+          // PHOTO - 80% width, center aligned
+          const photoWidth = (pageW - margin*2) * 0.8;
+          const photoX = (pageW - photoWidth) / 2;
+          
+          let imgSrc = null;
+          if(p && typeof p === 'object' && p.ref){
+            const blob = await idbGet(STORE_BLOBS, p.ref);
+            if(blob) imgSrc = URL.createObjectURL(blob);
+          } else if(typeof p === 'string') imgSrc = p;
+          
+          // Add photo ke PDF
+          if(imgSrc){
+            try{
+              pdf.addImage(imgSrc, 'JPEG', photoX, y, photoWidth, photoHeight);
+              if(p && typeof p === 'object' && p.ref){
+                URL.revokeObjectURL(imgSrc);
+              }
+            }catch(e){
+              console.warn('Gagal menambahkan gambar:', e);
+              // Fallback rectangle
+              pdf.setDrawColor(220,220,220); 
+              pdf.rect(photoX, y, photoWidth, photoHeight);
+              pdf.setTextColor(150,150,150);
+              pdf.text('Gambar tidak dapat dimuat', pageW/2, y + photoHeight/2, {align: 'center'});
+            }
+          } else {
+            pdf.setDrawColor(220,220,220); 
+            pdf.rect(photoX, y, photoWidth, photoHeight);
+            pdf.setTextColor(150,150,150);
+            pdf.text('Gambar tidak tersedia', pageW/2, y + photoHeight/2, {align: 'center'});
+          }
+          
+          y += photoHeight + 8;
+          
+          // DESCRIPTION - Full width bawah photo
+          pdf.setFillColor(248, 250, 252); 
+          pdf.rect(margin, y, pageW-margin*2, descHeight + 8, 'F');
+          
+          pdf.setFontSize(10); 
+          pdf.setTextColor(30,30,30); 
+          pdf.text(`📋 Deskripsi Foto ${i+1}:`, margin+4, y+6);
+          
+          pdf.setFontSize(9); 
+          pdf.setTextColor(70,70,70); 
+          pdf.text(descLines, margin+4, y+12);
+          
+          y += descHeight + 16; // Spacing setelah deskripsi
+          
+          // Separator antara foto (kecuali foto terakhir)
+          if(i < (area.photos||[]).length - 1) {
+            pdf.setDrawColor(220,220,220); 
+            pdf.setLineWidth(0.25); 
+            pdf.line(margin, y, pageW-margin, y); 
+            y += 12;
+          }
+        }
+        
+        processedAreas++;
+        
+        // Separator antar area (kecuali area terakhir)
+        if(processedAreas < totalAreas){
+          pdf.setDrawColor(200,200,200); 
+          pdf.setLineWidth(0.5); 
+          pdf.line(margin, y, pageW-margin, y); 
+          y += 16;
+        }
+      }
+      
+      // Signature page
+      if(y > pageH - 60) {
+        pdf.addPage();
+        currentPage++;
+        y = margin;
+      }
+      
+      y = Math.max(y, margin + 40);
+      pdf.setDrawColor(200,200,200); 
+      pdf.setLineWidth(0.5);
+      pdf.line(margin, y, pageW - margin, y); 
+      y += 10;
+      
+      pdf.setFontSize(12); 
+      pdf.setTextColor(60,60,60);
+      pdf.text('TANDA TANGAN DAN VERIFIKASI', pageW/2, y, {align: 'center'}); 
+      y += 10;
+      
+      if(signatureData) {
+        try {
+          const sigWidth = 60;
+          const sigHeight = 30;
+          const sigX = pageW - margin - sigWidth - 20;
+          pdf.addImage(signatureData, 'PNG', sigX, y, sigWidth, sigHeight);
+          
+          pdf.setDrawColor(0,0,0); 
+          pdf.setLineWidth(0.5);
+          pdf.line(sigX, y + sigHeight + 2, sigX + sigWidth, y + sigHeight + 2);
+          
+          pdf.setFontSize(10); 
+          pdf.setTextColor(0,0,0);
+          pdf.text(signatureName || petugas, sigX + sigWidth/2, y + sigHeight + 8, {align: 'center'});
+          
+          pdf.setFontSize(8); 
+          pdf.setTextColor(0,100,0);
+          pdf.text('Tanda Tangan Digital Terverifikasi', sigX + sigWidth/2, y + sigHeight + 15, {align: 'center'});
+        } catch(e) {
+          console.warn('Gagal menambahkan tanda tangan:', e);
+        }
+      }
+      
+      pdf.setFontSize(8); 
+      pdf.setTextColor(120,120,120); 
+      pdf.text(`Generated: ${new Date().toLocaleString('id-ID')} - Halaman ${currentPage}`, pageW/2, pageH - 10, {align:'center'});
+      
+      const filename = `Laporan_Patroli_${(petugas||'petugas').replace(/\s/g,'_')}_${tanggal}.pdf`;
+      
+      setOverlayProgress(100);
+      setTimeout(() => {
+        pdf.save(filename);
+        hideOverlay(); 
+        alert('✅ PDF Dashboard berhasil didownload: ' + filename);
+      }, 500);
+      
+    }catch(e){ 
+      hideOverlay(); 
+      console.error('PDF Generation Error:', e); 
+      alert('❌ Gagal membuat PDF: ' + e.message); 
+    }
+  });
+
+  // ==================== EVENT LISTENERS ====================
+document.getElementById('clearBtn').addEventListener('click', async ()=>{
+  if(!confirm('Reset semua data lokal? Semua area dan foto akan dihapus!')) return;
+  // ... kode yang sudah ada ...
+});
+
+// ✅ MANUAL CLEANUP BUTTON - TAMBAH DI SINI
+document.getElementById('manualCleanupBtn').addEventListener('click', () => {
+  memoryManager.fullCleanup();
+  alert('🧹 Memory cleanup completed! Browser should be more stable now.');
+});
+
+// JANGAN GANGGU BAGIAN INI ↓
+document.getElementById('compressBtn').addEventListener('click', async ()=>{
+  // ... kode compress ...
+});
+
+document.getElementById('backupBtn').addEventListener('click', async ()=>{
+  // ... kode backup ...
+});
+
+// PDF Generation
+document.getElementById('genPdfBtn').addEventListener('click', async ()=>{
+  // ... kode PDF ...
+});
+
+  document.getElementById('compressBtn').addEventListener('click', async ()=>{
+    showOverlay('Mengompres semua foto dengan kualitas terjaga...'); 
+    setOverlayProgress(0);
+    const keys = Object.keys(patrolData); 
+    let total=0;
+    keys.forEach(k=> total += (patrolData[k].photos||[]).length);
+    let processed=0;
+    for(const k of keys){
+      for(let i=0;i<(patrolData[k].photos||[]).length;i++){
+        try{
+          const p = patrolData[k].photos[i];
+          if(typeof p === 'string'){ 
+            const re = await compressDataUrl(p, 0.85, 1600); 
+            patrolData[k].photos[i] = re; 
+          }
+          processed++; 
+          setOverlayProgress(Math.round((processed/Math.max(1,total))*100));
+        }catch(e){}
+      }
+    }
+    persistMeta(); 
+    renderAreas(); 
+    hideOverlay(); 
+    alert('Kompresi selesai - Kualitas foto tetap terjaga!');
+  });
+
+  document.getElementById('backupBtn').addEventListener('click', async ()=>{
+    const meta = JSON.stringify({ 
+      patrolData, 
+      logoData: logoData ? 'LOGO_AVAILABLE' : null, 
+      signatureData: signatureData ? 'SIGNATURE_AVAILABLE' : null,
+      signatureName,
+      ts: new Date().toISOString() 
+    }, null, 2);
+    try{ 
+      await navigator.clipboard.writeText(meta); 
+      alert('Backup (meta) disalin ke clipboard. Untuk blobs, gunakan fitur export manual dari browser.'); 
+    }catch(e){ 
+      prompt('Backup data (copy manual):', meta); 
+    }
+  });
+
+  // ==================== HELP BUTTON SYSTEM ====================
+  function setupHelpButton() {
+    const helpBtn = document.getElementById('helpBtn');
+    helpBtn.addEventListener('click', () => {
+      switchToTab('guide');
+    });
+  }
+
+// ==================== CLEANUP SAAT TAB DITUTUP ====================
+window.addEventListener('beforeunload', function() {
+    // Cleanup temporary data
+    const tempKeys = Object.keys(localStorage).filter(key => 
+        key.includes('temp_') || key.includes('cache_')
+    );
+    
+    tempKeys.forEach(key => {
+        localStorage.removeItem(key);
+    });
+    
+    // Revoke semua blob URLs untuk free memory
+    document.querySelectorAll('img').forEach(img => {
+        if (img.src && img.src.startsWith('blob:')) {
+            URL.revokeObjectURL(img.src);
+        }
+    });
+});
+
+ // ==================== INITIALIZATION ====================
+// Jalankan auto cleanup terlebih dahulu
+await autoStorageCleanup();
+
+// Setup systems
+setupTabs();
+setupGalleryAccess();
+setupNativeCamera();
+setupAutoCleanup();
+setupSuperCleanup(); // <- TAMBAH INI
+setupHelpButton();
+
+// Setup interval cleanup setiap 1 jam
+setInterval(autoStorageCleanup, 60 * 60 * 1000);
+
+// Initial render
+renderAreas();
+
+})();
+</script>
+<script>
+(async () => {
+  const WORKER_URL = "https://orange-river-f6ea.sapammeded.workers.dev/"; // <= sudah lo deploy
+
+  // Utility: load image -> base64
+  async function imageUrlToBase64(url) {
+    return new Promise((resolve, reject) => {
+      try {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          try {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.naturalWidth || img.width;
+            canvas.height = img.naturalHeight || img.height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+            resolve(dataUrl);
+          } catch (e) { reject(e); }
+        };
+        img.onerror = (e) => reject(new Error("Cannot load image: " + url));
+        img.src = url;
+        // if cached and complete
+        if (img.complete && img.naturalWidth !== 0) {
+          // small delay to ensure onload run in some browsers
+          setTimeout(() => {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.naturalWidth || img.width;
+            canvas.height = img.naturalHeight || img.height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL("image/jpeg", 0.9));
+          }, 50);
+        }
+      } catch (err) { reject(err); }
+    });
+  }
+
+  // Post single base64 to worker
+  async function sendToWorker(base64DataNoPrefix) {
+    const res = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageBase64: base64DataNoPrefix })
+    });
+    return res.json();
+  }
+
+  // Helpers to find or create patrolData structure
+  function ensurePatrolDataIndex(areaIdx, photoIdx) {
+    window.patrolData = window.patrolData || [];
+    window.patrolData[areaIdx] = window.patrolData[areaIdx] || {};
+    window.patrolData[areaIdx].descriptions = window.patrolData[areaIdx].descriptions || [];
+    // ensure length for photoIdx
+    while (window.patrolData[areaIdx].descriptions.length <= photoIdx) {
+      window.patrolData[areaIdx].descriptions.push("");
+    }
+  }
+
+  // Insert text into nearest textarea/field if present
+  function insertTextInNearbyField(imgEl, text) {
+    // search order: sibling textarea, sibling input, within same card .description
+    const card = imgEl.closest(".photo-card, .card, .area-photo, .photo-item") || imgEl.parentElement;
+    if (!card) return;
+    const ta = card.querySelector("textarea, input[type=text], .description, .desc");
+    if (ta) {
+      if (ta.tagName.toLowerCase() === "textarea" || ta.tagName.toLowerCase() === "input") {
+        ta.value = text;
+        ta.dispatchEvent(new Event("input", { bubbles: true }));
+      } else {
+        ta.textContent = text;
+      }
+    }
+  }
+
+  // Determine area index & photo index with fallbacks
+  function getIndexes(imgEl) {
+    // prefer explicit attributes if provided
+    const attrArea = imgEl.closest("[data-area]")?.getAttribute("data-area") ?? imgEl.getAttribute("data-area");
+    const attrPhoto = imgEl.getAttribute("data-photo-index");
+    if (attrArea !== null || attrPhoto !== null) {
+      const a = attrArea !== null ? parseInt(attrArea, 10) : 0;
+      const p = attrPhoto !== null ? parseInt(attrPhoto, 10) : 0;
+      return [isNaN(a) ? 0 : a, isNaN(p) ? 0 : p];
+    }
+
+    // fallback: find area groups in DOM: elements with class 'area' or 'area-card'
+    const areaAncestor = imgEl.closest(".area, .area-card, .patrol-area, [data-area-group]") || imgEl.closest(".card") || document.body;
+    let areas = Array.from(document.querySelectorAll(".area, .area-card, .patrol-area, [data-area-group]"));
+    if (areas.length === 0) {
+      // fallback to one big area container (all images treated as area 0)
+      const photoList = Array.from(document.querySelectorAll("img"));
+      const photoIdx = photoList.indexOf(imgEl);
+      return [0, photoIdx < 0 ? 0 : photoIdx];
+    }
+    const areaIdx = areas.indexOf(areaAncestor);
+    // find photo index within area
+    const imgsInArea = Array.from(areaAncestor.querySelectorAll("img"));
+    const photoIdx = imgsInArea.indexOf(imgEl);
+    return [areaIdx < 0 ? 0 : areaIdx, photoIdx < 0 ? 0 : photoIdx];
+  }
+
+  // Create single generate UI for an image
+  function attachGenerateButton(imgEl) {
+    if (!imgEl || imgEl.dataset.aiAttach) return;
+    imgEl.dataset.aiAttach = "1";
+    const wrapper = document.createElement("div");
+    wrapper.style.position = "absolute";
+    wrapper.style.top = "8px";
+    wrapper.style.right = "8px";
+    wrapper.style.zIndex = 9999;
+    // small style (mobile friendly)
+    const btn = document.createElement("button");
+    btn.innerText = "AI ✍️";
+    btn.title = "Generate AI description";
+    btn.style.padding = "6px 8px";
+    btn.style.borderRadius = "8px";
+    btn.style.border = "none";
+    btn.style.background = "linear-gradient(90deg,#ff7a18,#af002d)";
+    btn.style.color = "white";
+    btn.style.fontSize = "12px";
+    btn.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
+    btn.style.opacity = 0.95;
+    btn.style.touchAction = "manipulation";
+
+    const spinner = document.createElement("span");
+    spinner.style.display = "none";
+    spinner.innerText = " ...";
+    spinner.style.marginLeft = "6px";
+    btn.appendChild(spinner);
+
+    // place wrapper relative to image's parent
+    const parent = imgEl.parentElement;
+    parent.style.position = parent.style.position || "relative";
+    wrapper.appendChild(btn);
+    parent.appendChild(wrapper);
+
+    btn.addEventListener("click", async (ev) => {
+      try {
+        btn.disabled = true;
+        spinner.style.display = "inline";
+        btn.title = "Working...";
+        const dataUrl = await imageUrlToBase64(imgEl.src);
+        const base64Only = dataUrl.replace(/^data:image\/\w+;base64,/, "");
+        const workerRes = await sendToWorker(base64Only);
+        let output = (workerRes && (workerRes.hasil || workerRes.result || workerRes.hits || workerRes.text)) || JSON.stringify(workerRes);
+        // some worker may wrap hasil in hasil field
+        if (typeof output !== "string") output = JSON.stringify(output);
+        // determine indexes and store
+        const [areaIdx, photoIdx] = getIndexes(imgEl);
+        ensurePatrolDataIndex(areaIdx, photoIdx);
+        window.patrolData[areaIdx].descriptions[photoIdx] = output;
+        // update UI nearby
+        insertTextInNearbyField(imgEl, output);
+        alert("AI description saved to patrolData[" + areaIdx + "].descriptions[" + photoIdx + "]");
+      } catch (e) {
+        console.error(e);
+        alert("AI generate failed: " + (e.message || e));
+      } finally {
+        btn.disabled = false;
+        spinner.style.display = "none";
+        btn.title = "Generate AI description";
+      }
+    });
+  }
+
+  // Create bulk generate button for area container
+  function attachAreaGenerate(areaEl) {
+    if (!areaEl || areaEl.dataset.aiAreaAttach) return;
+    areaEl.dataset.aiAreaAttach = "1";
+    const footer = document.createElement("div");
+    footer.style.marginTop = "8px";
+    footer.style.display = "flex";
+    footer.style.gap = "8px";
+    footer.style.justifyContent = "flex-end";
+
+    const btn = document.createElement("button");
+    btn.innerText = "Generate AI (Area)";
+    btn.style.padding = "8px 12px";
+    btn.style.borderRadius = "8px";
+    btn.style.border = "none";
+    btn.style.background = "linear-gradient(90deg,#00b09b,#96c93d)";
+    btn.style.color = "white";
+    btn.style.fontSize = "14px";
+
+    const status = document.createElement("span");
+    status.style.marginLeft = "10px";
+    status.style.fontSize = "12px";
+    status.style.color = "#333";
+
+    footer.appendChild(btn);
+    footer.appendChild(status);
+    areaEl.appendChild(footer);
+
+    btn.addEventListener("click", async () => {
+      const imgs = Array.from(areaEl.querySelectorAll("img"));
+      status.innerText = `0/${imgs.length}`;
+      for (let i = 0; i < imgs.length; i++) {
+        status.innerText = `${i+1}/${imgs.length}`;
+        const img = imgs[i];
+        try {
+          const dataUrl = await imageUrlToBase64(img.src);
+          const base64Only = dataUrl.replace(/^data:image\/\w+;base64,/, "");
+          const workerRes = await sendToWorker(base64Only);
+          let output = (workerRes && (workerRes.hasil || workerRes.result || workerRes.text)) || JSON.stringify(workerRes);
+          if (typeof output !== "string") output = JSON.stringify(output);
+          const [areaIdx, photoIdx] = getIndexes(img);
+          ensurePatrolDataIndex(areaIdx, photoIdx);
+          window.patrolData[areaIdx].descriptions[photoIdx] = output;
+          insertTextInNearbyField(img, output);
+        } catch (err) {
+          console.error("Failed on photo", i, err);
+        }
+        await new Promise(r => setTimeout(r, 300)); // small pause
+      }
+      status.innerText = `Done (${imgs.length})`;
+      alert("Area generation finished");
+    });
+  }
+
+  // Auto-attach for likely image containers
+  function boot() {
+    // selectors to find area containers and photos (tries multiple heuristics)
+    const areaSelectors = [".area", ".area-card", ".patrol-area", "[data-area-group]", ".card", ".areaContainer"];
+    const imgSelectors = [".photo-card img", ".card img", ".area img", "img"];
+
+    // attach generate buttons to images found by heuristics
+    const images = new Set();
+    areaSelectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach(area => {
+        // attach area generate
+        attachAreaGenerate(area);
+        // images inside area
+        const imgs = area.querySelectorAll("img");
+        imgs.forEach(i => images.add(i));
+      });
+    });
+
+    // fallback: also add any img elements not inside area
+    document.querySelectorAll("img").forEach(i => images.add(i));
+
+    Array.from(images).forEach(img => {
+      // skip tiny thumbnails (optional)
+      try {
+        const w = img.naturalWidth || img.width;
+        const h = img.naturalHeight || img.height;
+        if (w < 50 || h < 50) return;
+      } catch (e) {}
+      attachGenerateButton(img);
+    });
+  }
+
+  // Run on DOMContentLoaded
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+
+  // optional: expose a global to manually trigger attach if HTML is dynamic
+  window.__attachAiGenerator = boot;
+})();
+</script>
+</body>
+</html>
