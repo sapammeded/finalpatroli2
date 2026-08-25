@@ -1,0 +1,52 @@
+/**
+ * PATROLI PRO - Google Drive PDF Receiver
+ *
+ * One-time setup:
+ * 1) Open script.google.com and create a new project.
+ * 2) Paste this file into Code.gs.
+ * 3) Set DRIVE_FOLDER_ID below to the target folder ID.
+ * 4) Deploy > New deployment > Web app.
+ *    Execute as: Me
+ *    Who has access: Anyone
+ * 5) Copy the /exec URL into PDF_UPLOAD_URL in index_v4_auto_download_upload.html.
+ */
+const DRIVE_FOLDER_ID = '10uSLOFq1-ZlFGNK1Fk-5bM2FTyTKhj6W';
+
+function doGet() {
+  return json_({ ok: true, service: 'Patroli PRO Google Drive Upload' });
+}
+
+function doPost(e) {
+  try {
+    const raw = e && e.postData && e.postData.contents ? e.postData.contents : '';
+    if (!raw) throw new Error('Request body kosong.');
+    const data = JSON.parse(raw);
+    if (data.action !== 'uploadPdf') throw new Error('Action tidak valid.');
+    if (!data.pdfBase64) throw new Error('PDF base64 tidak ditemukan.');
+
+    const folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
+    const bytes = Utilities.base64Decode(data.pdfBase64);
+    const blob = Utilities.newBlob(bytes, data.mimeType || 'application/pdf', safeName_(data.filename || ('Laporan_Patroli_' + Date.now() + '.pdf')));
+    const file = folder.createFile(blob);
+
+    return json_({
+      ok: true,
+      fileId: file.getId(),
+      fileName: file.getName(),
+      url: file.getUrl(),
+      folderId: DRIVE_FOLDER_ID,
+      uploadedAt: new Date().toISOString()
+    });
+  } catch (err) {
+    return json_({ ok: false, error: String(err && err.message ? err.message : err) });
+  }
+}
+
+function safeName_(name) {
+  return String(name).replace(/[\\/:*?"<>|]/g, '_').slice(0, 180);
+}
+
+function json_(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
