@@ -1,0 +1,1 @@
+const fs=require('fs'); const path=require('path'); fs.rmSync('www',{recursive:true,force:true}); fs.mkdirSync('www',{recursive:true}); fs.copyFileSync('stt.html',path.join('www','index.html'));
