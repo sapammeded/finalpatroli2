@@ -7,6 +7,8 @@ on:
       - 'stt.html'
       - 'package.json'
       - 'scripts/prepare-android.js'
+      - 'scripts/android-webview-media.js'
+      - 'android-patch/MainActivity.java'
       - 'capacitor.config.json'
       - '.github/workflows/build-apk.yml'
 
@@ -31,10 +33,20 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Prepare web app
+      - name: Prepare web app and native media bridge
         run: |
-          mkdir -p www
-          cp stt.html www/index.html
+          node scripts/prepare-android.js
+          python3 - <<'PY'
+          from pathlib import Path
+          html = Path('www/index.html').read_text(encoding='utf-8')
+          bridge = Path('scripts/android-webview-media.js').read_text(encoding='utf-8')
+          marker = '</head>'
+          injection = '<script>\n' + bridge + '\n</script>\n'
+          if marker not in html:
+              raise SystemExit('STT HTML missing </head> marker')
+          html = html.replace(marker, injection + marker, 1)
+          Path('www/index.html').write_text(html, encoding='utf-8')
+          PY
           printf '%s' '{"appId":"com.stt.professionalsecuritypatrol","appName":"STT Professional Security Patrol","webDir":"www","server":{"androidScheme":"https"}}' > capacitor.config.json
 
       - name: Install dependencies
@@ -45,6 +57,24 @@ jobs:
 
       - name: Sync Capacitor
         run: npx cap sync android
+
+      - name: Patch Android camera and file chooser
+        run: |
+          MAIN=$(find android/app/src/main/java -name MainActivity.java | head -1)
+          test -n "$MAIN"
+          cp android-patch/MainActivity.java "$MAIN"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('android/app/src/main/AndroidManifest.xml')
+          s=p.read_text(encoding='utf-8')
+          perms=['<uses-permission android:name="android.permission.CAMERA" />']
+          insert='\n'.join(perms)+'\n'
+          if 'android.permission.CAMERA' not in s:
+              s=s.replace('<manifest ', '<manifest ', 1)
+              pos=s.find('>')+1
+              s=s[:pos]+'\n'+insert+s[pos:]
+          p.write_text(s,encoding='utf-8')
+          PY
 
       - name: Build debug APK
         working-directory: android
