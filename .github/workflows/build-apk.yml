@@ -1,4 +1,4 @@
-name: Build STT Android APK
+name: Build STT Professional Security Patrol APK
 on:
   workflow_dispatch:
   push:
@@ -6,7 +6,6 @@ on:
       - 'stt.html'
       - 'package.json'
       - 'capacitor.config.json'
-      - 'scripts/**'
       - '.github/workflows/build-apk.yml'
 jobs:
   build:
@@ -21,16 +20,26 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: Prepare web app
+        run: |
+          mkdir -p www
+          cp stt.html www/index.html
+          printf '%s' '{"appId":"com.stt.professionalsecuritypatrol","appName":"STT Professional Security Patrol","webDir":"www","server":{"androidScheme":"https"}}' > capacitor.config.json
       - name: Install dependencies
         run: npm install
-      - name: Create Android project
+      - name: Add Android platform
         run: npx cap add android
-      - name: Build APK
-        run: npm run build:android
+      - name: Sync Capacitor
+        run: npx cap sync android
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk STT-Professional-Security-Patrol.apk
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: STT-Professional-Security-Patrol-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: STT-Professional-Security-Patrol.apk
           if-no-files-found: error
           retention-days: 30
